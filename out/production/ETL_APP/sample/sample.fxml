@@ -18,8 +18,8 @@
   </rowConstraints>
    <children>
       <Button fx:id="bETL" mnemonicParsing="false" onAction="#clickETLButton" text="ETL" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-      <Button fx:id="bExtract" mnemonicParsing="false" text="Extract Data" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-      <Button fx:id="bTransform" disable="true" mnemonicParsing="false" text="Transform Data" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-      <Button fx:id="bLoad" disable="true" mnemonicParsing="false" text="Load Data" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <Button fx:id="bExtract" mnemonicParsing="false" onAction="#clickExtractButton" text="Extract Data" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <Button fx:id="bTransform" disable="true" mnemonicParsing="false" onAction="#clickTransformButton" text="Transform Data" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+      <Button fx:id="bLoad" disable="true" mnemonicParsing="false" onAction="#clickLoadButton" text="Load Data" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

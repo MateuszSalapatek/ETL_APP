@@ -113,8 +113,30 @@ public class Controller {
             Controller.this.loadCommentToDB(list.get(i));
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zakończono procedurę ETL");
-        alert.setHeaderText("Procedura ETL została zakończona pomyślnie");
+        alert.setTitle("ETL procedure");
+        alert.setHeaderText("ETL procedure finished successfully");
         alert.showAndWait();
+    }
+
+    @FXML
+    private void clickExtractButton (ActionEvent event) throws SQLException {
+        ArrayList<Comment> list = Controller.this.getComments();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Extract procedure");
+        alert.setHeaderText("Extract procedure finished successfully");
+        alert.setContentText("Quantity of extracted comments: " + list.size());
+        alert.showAndWait();
+
+        bTransform.setDisable(false);
+        bExtract.setDisable(true);
+    }
+
+    @FXML
+    private void clickTransformButton (ActionEvent event) throws SQLException {
+    }
+
+    @FXML
+    private void clickLoadButton (ActionEvent event) throws SQLException {
     }
 }
