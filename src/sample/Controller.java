@@ -24,6 +24,8 @@ import static sample.OracleConn.pstmt;
 public class Controller {
 
     private static String html = "https://www.filmweb.pl/Shrek/discussion?plusMinus=false&page=";
+    ArrayList<Comment> extractedCommentsList;
+    ArrayList<Comment> transformedCommentsList;
 
     @FXML
     private Button bELT, bExtract, bTransform, bLoad;
@@ -120,12 +122,12 @@ public class Controller {
 
     @FXML
     private void clickExtractButton (ActionEvent event) throws SQLException {
-        ArrayList<Comment> list = Controller.this.getComments();
+        extractedCommentsList = Controller.this.getComments();
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Extract procedure");
         alert.setHeaderText("Extract procedure finished successfully");
-        alert.setContentText("Quantity of extracted comments: " + list.size());
+        alert.setContentText("Quantity of extracted comments: " + extractedCommentsList.size());
         alert.showAndWait();
 
         bTransform.setDisable(false);
@@ -134,6 +136,22 @@ public class Controller {
 
     @FXML
     private void clickTransformButton (ActionEvent event) throws SQLException {
+        if(!(extractedCommentsList.size()>0)){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Transform procedure");
+            alert.setHeaderText("Transform is not possible, because no data hes been extracted");
+            alert.showAndWait();
+        }else{
+            transformedCommentsList = transformComments(extractedCommentsList);
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Transform procedure");
+            alert.setHeaderText("Transform procedure finished successfully");
+            alert.showAndWait();
+
+            bTransform.setDisable(true);
+            bLoad.setDisable(false);
+        }
     }
 
     @FXML
