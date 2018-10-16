@@ -1,9 +1,13 @@
 package sample;
 
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -22,21 +26,11 @@ public class Controller {
     private static String html = "https://www.filmweb.pl/Shrek/discussion?plusMinus=false&page=";
 
     @FXML
-    private TextArea tAContentText;
+    private Button bELT, bExtract, bTransform, bLoad;
 
     @FXML
     private void initialize() throws IOException, SQLException {
         OracleConn Oracle = new OracleConn();
-
-        ArrayList<Comment> list = getComments();
-        System.out.println(list.size());
-        for (int i = 0; i<list.size(); i++){
-            loadCommentToDB(list.get(i));
-        }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Zakończono procedurę ETL");
-        alert.setHeaderText("Procedura ETL została zakończona pomyślnie");
-        alert.showAndWait();
 
 
         // TODO jak pobrać wartość id?
@@ -109,5 +103,18 @@ public class Controller {
     public ArrayList<Comment> transformComments(ArrayList<Comment> commentList){
 
         return commentList;
+    }
+
+    @FXML
+    private void clickETLButton (ActionEvent event) throws SQLException {
+        ArrayList<Comment> list = Controller.this.getComments();
+        list = Controller.this.transformComments(list);
+        for (int i = 0; i < list.size(); i++) {
+            Controller.this.loadCommentToDB(list.get(i));
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Zakończono procedurę ETL");
+        alert.setHeaderText("Procedura ETL została zakończona pomyślnie");
+        alert.showAndWait();
     }
 }
