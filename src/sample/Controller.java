@@ -2,43 +2,41 @@ package sample;
 
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+
+import static sample.OracleConn.conn;
+import static sample.OracleConn.pstmt;
 
 public class Controller {
 
-    private static String html = "https://www.filmweb.pl/film/Kler-2018-810402/discussion?plusMinus=false&page=";
+    private static String html = "https://www.filmweb.pl/Shrek/discussion?plusMinus=false&page=";
 
     @FXML
     private TextArea tAContentText;
 
     @FXML
-    private void initialize() throws IOException {
+    private void initialize() throws IOException, SQLException {
+        OracleConn Oracle = new OracleConn();
+
         ArrayList<Comment> list = getComments();
         System.out.println(list.size());
         for (int i = 0; i<list.size(); i++){
-            tAContentText.setText(tAContentText.getText()+ "Autor: "+ list.get(i).getUser() + "---- Komentarz: " + list.get(i).getCommentContent()+
-                    "---- Data utworzenia: "+ list.get(i).getCreationDate()+"\n");
-
+            loadCommentToDB(list.get(i));
         }
-
-
-
-
-//        TESTY///////////////////////
-        //        Elements test = doc.getElementsByClass("topics-list").select(".filmCategory");
-//        System.out.println(test.attr("id","topic").get(28).select(".text").html()); //content
-//        System.out.println(test.attr("id","topic").get(28).select(".userNameLink").html()); //user
-//        System.out.println(test.attr("id","topic").get(28).select(".topicInfo .cap").html()); //data dodania
-//        System.out.println(test.attr("id","topic").get(28).select(".topicInfo li:nth-child(3)").html()); //ocena
-
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Zakończono procedurę ETL");
+        alert.setHeaderText("Procedura ETL została zakończona pomyślnie");
+        alert.showAndWait();
 
 
         // TODO jak pobrać wartość id?
@@ -76,8 +74,35 @@ public class Controller {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-
+            e.getMessage();
         }
         return commentsList;
+    }
+
+    public Boolean loadCommentToDB(Comment comment) throws SQLException {
+        try {
+            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (id_seq.nextval,?,?,?,SYSDATE)");
+//            pstmt.setInt(1, comment.getId());
+            pstmt.setString(1, comment.getUser());
+            pstmt.setString(2, comment.getCommentContent());
+            pstmt.setString(3, comment.getCreationDate());
+            pstmt.execute();
+            pstmt.close();
+            return true;
+        } catch (SQLIntegrityConstraintViolationException e) {
+            //duplicate id
+            return false;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        finally{
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
     }
 }
