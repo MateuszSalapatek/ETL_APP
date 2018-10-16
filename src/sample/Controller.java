@@ -109,14 +109,16 @@ public class Controller {
 
     @FXML
     private void clickETLButton (ActionEvent event) throws SQLException {
-        ArrayList<Comment> list = Controller.this.getComments();
-        list = Controller.this.transformComments(list);
-        for (int i = 0; i < list.size(); i++) {
-            Controller.this.loadCommentToDB(list.get(i));
+        ArrayList<Comment> extractedList = Controller.this.getComments();
+        ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+        for (int i = 0; i < tranformedList.size(); i++) {
+            Controller.this.loadCommentToDB(tranformedList.get(i));
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("ETL procedure");
         alert.setHeaderText("ETL procedure finished successfully");
+        alert.setContentText("Quantity of extracted comments: " + extractedList.size()+"\n"+
+                "Quantity of loaded comments: " + tranformedList.size());
         alert.showAndWait();
     }
 
@@ -148,13 +150,32 @@ public class Controller {
             alert.setTitle("Transform procedure");
             alert.setHeaderText("Transform procedure finished successfully");
             alert.showAndWait();
-
-            bTransform.setDisable(true);
-            bLoad.setDisable(false);
         }
+        bTransform.setDisable(true);
+        bLoad.setDisable(false);
     }
 
     @FXML
     private void clickLoadButton (ActionEvent event) throws SQLException {
+        if(!(transformedCommentsList.size()>0)){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Load procedure");
+            alert.setHeaderText("Load is not possible, because no data found after transforming");
+            alert.showAndWait();
+        }else{
+            for (int i = 0; i < transformedCommentsList.size(); i++) {
+                Controller.this.loadCommentToDB(transformedCommentsList.get(i));
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Load procedure");
+            alert.setHeaderText("Load procedure finished successfully");
+            alert.setContentText("Quantity of loaded comments: " + transformedCommentsList.size());
+            alert.showAndWait();
+        }
+        transformedCommentsList.clear();
+        extractedCommentsList.clear();
+        bTransform.setDisable(true);
+        bLoad.setDisable(true);
+        bExtract.setDisable(false);
     }
 }
