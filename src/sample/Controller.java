@@ -1,25 +1,21 @@
 package sample;
 
 
-import com.sun.net.httpserver.Authenticator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import static sample.OracleConn.conn;
 import static sample.OracleConn.pstmt;
-import static sample.OracleConn.stat;
 
 public class Controller {
 
@@ -42,10 +38,6 @@ public class Controller {
         alert.setHeaderText("Procedura ETL została zakończona pomyślnie");
         alert.showAndWait();
 
-//            tAContentText.setText(tAContentText.getText()+ "Autor: "+ list.get(i).getUser() + "---- Komentarz: " + list.get(i).getCommentContent()+
-//                    "---- Data utworzenia: "+ list.get(i).getCreationDate()+"\n");
-//
-//        }
 
         // TODO jak pobrać wartość id?
         // TODO niektórzy nie oceniają
@@ -87,7 +79,7 @@ public class Controller {
         return commentsList;
     }
 
-    public Integer loadCommentToDB(Comment comment) throws SQLException {
+    public Boolean loadCommentToDB(Comment comment) throws SQLException {
         try {
             pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (id_seq.nextval,?,?,?,SYSDATE)");
 //            pstmt.setInt(1, comment.getId());
@@ -96,13 +88,13 @@ public class Controller {
             pstmt.setString(3, comment.getCreationDate());
             pstmt.execute();
             pstmt.close();
-            return 0;
+            return true;
         } catch (SQLIntegrityConstraintViolationException e) {
             //duplicate id
-            return 1;
-        } catch (NullPointerException e){
+            return false;
+        } catch (Exception e){
             e.printStackTrace();
-            return 2;
+            return false;
         }
         finally{
             try{
