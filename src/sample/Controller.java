@@ -105,4 +105,9 @@ public class Controller {
             }
         }
     }
+
+    public ArrayList<Comment> transformComments(ArrayList<Comment> commentList){
+
+        return commentList;
+    }
 }
