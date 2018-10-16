@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class OracleConn {
 
-    public static final String user = "System";
+    public static final String user = "system";
     public static final String password = "admin1";
     public static final String db_url = "jdbc:oracle:thin:@localhost:1521:xe";
     public static Connection conn = null;
