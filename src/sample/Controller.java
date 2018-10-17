@@ -27,10 +27,13 @@ import static sample.OracleConn.stat;
 
 public class Controller {
 
+    //TODO przeszukiwanie listy filmów
     //TODO aktualizacja danych ....filmy czy all?
     //TODO wyświetlanie danych
     //TODO export
     //TODO extract na - ilośc odpowiedzi na komentarz, kto ostatni odpowiedział, kiedy, liczba plusów i minusów pod komentarzem
+    //TODO poprawić alerty, dodać wszędzie try catche
+    //TODO plik z językiem
 
 
 
@@ -329,5 +332,9 @@ public class Controller {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+    }
+    @FXML
+    private void clickOpenTableView () throws SQLException {
+
     }
 }
