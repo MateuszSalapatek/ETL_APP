@@ -27,10 +27,10 @@ import static sample.OracleConn.stat;
 
 public class Controller {
 
-    //TODO wyczyszczenie danych z bazy
     //TODO aktualizacja danych ....filmy czy all?
     //TODO wyświetlanie danych
     //TODO export
+    //TODO extract na - ilośc odpowiedzi na komentarz, kto ostatni odpowiedział, kiedy, liczba plusów i minusów pod komentarzem
 
 
 
