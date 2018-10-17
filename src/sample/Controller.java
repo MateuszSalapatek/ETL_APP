@@ -48,33 +48,25 @@ public class Controller {
         try {
             int pageIterator = 1;
             Document doc = Jsoup.connect(html + pageIterator).get();
+
             Elements pageContent = doc.getElementsByClass("filmPage");
 
-            while (doc.getElementsByClass("topics-list").select(".filmCategory").size() > 0) {
+            while (doc.getElementsByClass("topics-list").select(".filmCategory").size() > 0) {  // page iterator
 
-//                for (int i = 0; i < doc.getElementsByClass("topics-list").select(".filmCategory").size(); i++) {
-//                    Elements fbBody = doc.getElementsByClass("topics-list").select(".filmCategory");
+                Elements fbComments = doc.getElementsByClass("filmCategory"); //data dodania
 
+                for (Element filmCategory : fbComments) {
                     Comment commentObject = new Comment();
-//                    commentObject.setTitle(pageContent.select(".hdr h1 a").html());
-//                    commentObject.setCommentContent(fbBody.attr("id", "topic").get(i).select(".text").html()); //  comment
-//                    if ( commentObject.getCommentContent().equals("")){
-//                        commentObject.setCommentContent(fbBody.attr("id","topic").get(i).select(".italic").html()); //content dla niezgosności z regulaminem);
-//                    }
-//                    commentObject.setUser(fbBody.attr("id", "topic").get(i).select(".userNameLink").html()); // user
-//                    commentObject.setCreationDate(fbBody.attr("id", "topic").get(i).select(".topicInfo .cap").html()); // creation date
 
-                    Elements fbComments = doc.getElementsByClass("filmCategory"); //data dodania
+                    commentObject.setId(filmCategory.id());  //id
+                    commentObject.setCreationDate(filmCategory.select(".topicInfo .cap").html()); //date
+                    commentObject.setUser(filmCategory.getElementsByClass("userNameLink").html()); //user
+                    commentObject.setCommentContent(filmCategory.getElementsByClass("text").html()); //comment
+                    commentObject.setTitle(pageContent.select(".hdr h1 a").html()); //film tittle
 
-                    for (Element filmCategory : fbComments) {
-                        commentObject.setId(filmCategory.id());
-                        commentObject.setCreationDate(filmCategory.select(".topicInfo .cap").html());
-                        commentObject.setUser(filmCategory.getElementsByClass("userNameLink").html());
-                        commentObject.setCommentContent(filmCategory.getElementsByClass("text").html());
-                        if(commentObject.getCommentContent().equals("")){
-                            commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
-                        }
-
+                    if(commentObject.getCommentContent().equals("")){
+                        commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
+                    }
                     commentsList.add(commentObject);
                 }
                 pageIterator++;
@@ -91,11 +83,12 @@ public class Controller {
 
     public Boolean loadCommentToDB(Comment comment) throws SQLException {
         try {
-            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,SYSDATE)");
+            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,?,SYSDATE)");
             pstmt.setString(1, comment.getId());
             pstmt.setString(2, comment.getUser());
             pstmt.setString(3, comment.getCommentContent());
             pstmt.setString(4, comment.getCreationDate());
+            pstmt.setString(5, comment.getTitle());
             pstmt.execute();
             pstmt.close();
             return true;
