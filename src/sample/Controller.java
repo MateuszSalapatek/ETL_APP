@@ -5,10 +5,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import sun.net.www.protocol.http.HttpURLConnection;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
@@ -21,7 +23,7 @@ import static sample.OracleConn.pstmt;
 
 public class Controller {
 
-    private static String html = "https://www.filmweb.pl/Shrek/discussion?plusMinus=false&page=";
+    private static String html = "https://www.filmweb.pl/Shrek/discussion?plusMinus=false&page=111";
     ArrayList<Comment> extractedCommentsList;
     ArrayList<Comment> transformedCommentsList;
 
@@ -31,12 +33,6 @@ public class Controller {
     @FXML
     private void initialize() throws IOException, SQLException {
         OracleConn Oracle = new OracleConn();
-
-
-        // TODO jak pobrać wartość id?
-        // TODO niektórzy nie oceniają
-        // TODO uzytkownik może być usunięty
-        // TODO na dacie 0200 i 0100 to chyba strefy czasowe, więc będzie trzeba dodać przy transformie
 
     }
     public ArrayList<Comment> getComments() {
@@ -73,7 +69,12 @@ public class Controller {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-            e.getMessage();
+            if (e.getMessage().equals("HTTP error fetching URL")){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Wrong page");
+                alert.setHeaderText("The page for following URL not found");
+                alert.showAndWait();
+            }
         }
         return commentsList;
     }
@@ -119,26 +120,34 @@ public class Controller {
     private void clickETLButton (ActionEvent event) throws SQLException {
         ArrayList<Comment> extractedList = Controller.this.getComments();
         ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+        Integer deleteCounter = 0;
         for (int i = 0; i < tranformedList.size(); i++) {
-            Controller.this.loadCommentToDB(tranformedList.get(i));
+            Boolean load = loadCommentToDB(tranformedList.get(i));
+            if(!load){
+                deleteCounter++;
+            }
         }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("ETL procedure");
         alert.setHeaderText("ETL procedure finished successfully");
         alert.setContentText("Quantity of extracted comments: " + extractedList.size()+"\n"+
-                "Quantity of loaded comments: " + tranformedList.size());
+                "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
         alert.showAndWait();
     }
 
     @FXML
     private void clickExtractButton (ActionEvent event) throws SQLException {
-        extractedCommentsList = Controller.this.getComments();
+        try {
+            extractedCommentsList = Controller.this.getComments();
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Extract procedure");
-        alert.setHeaderText("Extract procedure finished successfully");
-        alert.setContentText("Quantity of extracted comments: " + extractedCommentsList.size());
-        alert.showAndWait();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Extract procedure");
+            alert.setHeaderText("Extract procedure finished successfully");
+            alert.setContentText("Quantity of extracted comments: " + extractedCommentsList.size());
+            alert.showAndWait();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         bTransform.setDisable(false);
         bExtract.setDisable(true);
@@ -146,39 +155,56 @@ public class Controller {
 
     @FXML
     private void clickTransformButton (ActionEvent event) throws SQLException {
-        if(!(extractedCommentsList.size()>0)){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Transform procedure");
-            alert.setHeaderText("Transform is not possible, because no data hes been extracted");
-            alert.showAndWait();
-        }else{
-            transformedCommentsList = transformComments(extractedCommentsList);
+        try {
+            if (!(extractedCommentsList.size() > 0)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Transform procedure");
+                alert.setHeaderText("Transform is not possible, because no data hes been extracted");
+                alert.showAndWait();
+                bTransform.setDisable(true);
+                bExtract.setDisable(false);
+                extractedCommentsList.clear();
+                transformedCommentsList.clear();
+            } else {
+                transformedCommentsList = transformComments(extractedCommentsList);
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Transform procedure");
-            alert.setHeaderText("Transform procedure finished successfully");
-            alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Transform procedure");
+                alert.setHeaderText("Transform procedure finished successfully");
+                alert.showAndWait();
+                bTransform.setDisable(true);
+                bLoad.setDisable(false);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        bTransform.setDisable(true);
-        bLoad.setDisable(false);
     }
 
     @FXML
     private void clickLoadButton (ActionEvent event) throws SQLException {
-        if(!(transformedCommentsList.size()>0)){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Load procedure");
-            alert.setHeaderText("Load is not possible, because no data found after transforming");
-            alert.showAndWait();
-        }else{
-            for (int i = 0; i < transformedCommentsList.size(); i++) {
-                Controller.this.loadCommentToDB(transformedCommentsList.get(i));
+        try {
+            if (!(transformedCommentsList.size() > 0)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Load procedure");
+                alert.setHeaderText("Load is not possible, because no data found after transforming");
+                alert.showAndWait();
+            } else {
+                Integer deleteCounter = 0;
+                for (int i = 0; i < transformedCommentsList.size(); i++) {
+                    Boolean load = loadCommentToDB(transformedCommentsList.get(i));
+                    if(!load){
+                        deleteCounter++;
+                    }
+                }
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Load procedure");
+                alert.setHeaderText("Load procedure finished successfully");
+                alert.setContentText("Quantity of loaded comments: " + (transformedCommentsList.size() - deleteCounter));
+                alert.showAndWait();
             }
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Load procedure");
-            alert.setHeaderText("Load procedure finished successfully");
-            alert.setContentText("Quantity of loaded comments: " + transformedCommentsList.size());
-            alert.showAndWait();
+        }catch (Exception e){
+            e.printStackTrace();
         }
         transformedCommentsList.clear();
         extractedCommentsList.clear();
