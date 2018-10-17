@@ -2,10 +2,11 @@ package sample;
 
 public class Comment {
 
-    private Integer id;
+    private String id;
     private String user;
     private String commentContent;
     private String creationDate;
+    private String title;
 
     public String getUser() {
         return user;
@@ -19,7 +20,7 @@ public class Comment {
         return creationDate;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
@@ -35,7 +36,15 @@ public class Comment {
         this.creationDate = creationDate;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
