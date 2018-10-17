@@ -2,12 +2,9 @@ package sample;
 
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.cell.PropertyValueFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -84,7 +81,7 @@ public class Controller {
     public Boolean loadCommentToDB(Comment comment) throws SQLException {
         try {
             pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,?,SYSDATE)");
-            pstmt.setString(1, comment.getId());
+            pstmt.setInt(1, comment.getIdTransformed());
             pstmt.setString(2, comment.getUser());
             pstmt.setString(3, comment.getCommentContent());
             pstmt.setString(4, comment.getCreationDate());
@@ -110,6 +107,10 @@ public class Controller {
     }
 
     public ArrayList<Comment> transformComments(ArrayList<Comment> commentList){
+
+        for ( int i = 0; i<commentList.size(); i++ ){
+            commentList.get(i).setIdTransformed(Integer.parseInt(commentList.get(i).getId().replaceAll("[^0-9]", ""))); //to delete chars
+        }
 
         return commentList;
     }

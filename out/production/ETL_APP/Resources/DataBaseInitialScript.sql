@@ -5,7 +5,8 @@ CREATE TABLE COMMENTS (
                         author VARCHAR2(4000),
                         commentContent VARCHAR2(4000),
                         creationDate VARCHAR2(4000),
-                        creationDateDB DATE 
+                        filmTittle VARCHAR2(4000),
+                        creationDateDB DATE
                       ); 
                       
                       

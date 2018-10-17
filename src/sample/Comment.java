@@ -7,6 +7,7 @@ public class Comment {
     private String commentContent;
     private String creationDate;
     private String title;
+    private Integer idTransformed;
 
     public String getUser() {
         return user;
@@ -28,6 +29,10 @@ public class Comment {
         this.user = user;
     }
 
+    public Integer getIdTransformed() {
+        return idTransformed;
+    }
+
     public void setCommentContent(String commentContent) {
         this.commentContent = commentContent;
     }
@@ -46,5 +51,9 @@ public class Comment {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setIdTransformed(Integer idTransformed) {
+        this.idTransformed = idTransformed;
     }
 }
