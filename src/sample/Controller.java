@@ -60,6 +60,10 @@ public class Controller {
                     commentObject.setUser(filmCategory.getElementsByClass("userNameLink").html()); //user
                     commentObject.setCommentContent(filmCategory.getElementsByClass("text").html()); //comment
                     commentObject.setTitle(pageContent.select(".hdr h1 a").html()); //film tittle
+                    commentObject.setCommentTitle(filmCategory.select(".s-16 a").html());
+                    commentObject.setFilmRate(filmCategory.select(".topicInfo li:nth-child(3)").html());
+                    commentObject.setFilmYear(pageContent.select(".halfSize").html());
+                    commentObject.setFilmTime(pageContent.select(".filmTime").html().substring(0,15));
 
                     if(commentObject.getCommentContent().equals("")){
                         commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
@@ -80,12 +84,16 @@ public class Controller {
 
     public Boolean loadCommentToDB(Comment comment) throws SQLException {
         try {
-            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,?,SYSDATE)");
+            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,?,?,?,?,?,SYSDATE)");
             pstmt.setInt(1, comment.getIdTransformed());
             pstmt.setString(2, comment.getUser());
-            pstmt.setString(3, comment.getCommentContent());
-            pstmt.setString(4, comment.getCreationDate());
-            pstmt.setString(5, comment.getTitle());
+            pstmt.setString(3, comment.getCommentTitle());
+            pstmt.setString(4, comment.getCommentContent());
+            pstmt.setString(5, comment.getFilmRateTransformed());
+            pstmt.setString(6, comment.getCreationDate());
+            pstmt.setString(7, comment.getTitle());
+            pstmt.setInt(8, comment.getFilmYearTransformed());
+            pstmt.setString(9, comment.getFilmTime());
             pstmt.execute();
             pstmt.close();
             return true;
@@ -110,6 +118,9 @@ public class Controller {
 
         for ( int i = 0; i<commentList.size(); i++ ){
             commentList.get(i).setIdTransformed(Integer.parseInt(commentList.get(i).getId().replaceAll("[^0-9]", ""))); //to delete chars
+            commentList.get(i).setFilmRateTransformed(commentList.get(i).getFilmRate().replaceAll("[^0-9]", ""));
+            commentList.get(i).setFilmYearTransformed(Integer.parseInt(commentList.get(i).getFilmYear().replaceAll("[^0-9]","")));
+
         }
 
         return commentList;

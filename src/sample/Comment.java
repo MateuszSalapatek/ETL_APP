@@ -8,13 +8,44 @@ public class Comment {
     private String creationDate;
     private String title;
     private Integer idTransformed;
+    private String commentTitle;
+    private String filmRate;
+    private String filmRateTransformed;
+    private String filmYear;
+    private Integer filmYearTransformed;
+    private String filmTime;
+    private String filmTimeTransformed;
 
     public String getUser() {
         return user;
     }
 
+    public String getFilmTimeTransformed() {
+        return filmTimeTransformed;
+    }
+
+    public String getFilmTime() {
+        return filmTime;
+    }
+
+    public Integer getFilmYearTransformed() {
+        return filmYearTransformed;
+    }
+
+    public String getFilmYear() {
+        return filmYear;
+    }
+
+    public String getFilmRateTransformed() {
+        return filmRateTransformed;
+    }
+
     public String getCommentContent() {
         return commentContent;
+    }
+
+    public String getFilmRate() {
+        return filmRate;
     }
 
     public String getCreationDate() {
@@ -31,6 +62,10 @@ public class Comment {
 
     public Integer getIdTransformed() {
         return idTransformed;
+    }
+
+    public String getCommentTitle() {
+        return commentTitle;
     }
 
     public void setCommentContent(String commentContent) {
@@ -55,5 +90,33 @@ public class Comment {
 
     public void setIdTransformed(Integer idTransformed) {
         this.idTransformed = idTransformed;
+    }
+
+    public void setCommentTitle(String commentTitle) {
+        this.commentTitle = commentTitle;
+    }
+
+    public void setFilmRate(String filmRate) {
+        this.filmRate = filmRate;
+    }
+
+    public void setFilmYear(String filmYear) {
+        this.filmYear = filmYear;
+    }
+
+    public void setFilmRateTransformed(String filmRateTransformed) {
+        this.filmRateTransformed = filmRateTransformed;
+    }
+
+    public void setFilmYearTransformed(Integer filmYearTransformed) {
+        this.filmYearTransformed = filmYearTransformed;
+    }
+
+    public void setFilmTime(String filmTime) {
+        this.filmTime = filmTime;
+    }
+
+    public void setFilmTimeTransformed(String filmTitleTransformed) {
+        this.filmTimeTransformed = filmTitleTransformed;
     }
 }
