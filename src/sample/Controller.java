@@ -1,16 +1,17 @@
 package sample;
 
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import org.jsoup.HttpStatusException;
+import javafx.scene.control.ChoiceBox;
+import javafx.util.StringConverter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import sun.net.www.protocol.http.HttpURLConnection;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
@@ -18,29 +19,49 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
+import static javafx.collections.FXCollections.observableArrayList;
 import static sample.OracleConn.conn;
 import static sample.OracleConn.pstmt;
 
 public class Controller {
 
-    private static String html = "https://www.filmweb.pl/Shrek/discussion?plusMinus=false&page=111";
-    ArrayList<Comment> extractedCommentsList;
-    ArrayList<Comment> transformedCommentsList;
+
+    private static String top500html = "https://www.filmweb.pl/ranking/film";
+    private ArrayList<Comment> extractedCommentsList;
+    private ArrayList<Comment> transformedCommentsList;
 
     @FXML
     private Button bELT, bExtract, bTransform, bLoad;
 
     @FXML
+    private ChoiceBox cbFilmsTitle;
+
+    @FXML
     private void initialize() throws IOException, SQLException {
         OracleConn Oracle = new OracleConn();
 
+        cbFilmsTitle.getItems().setAll(getFilmsLOV());
+
+        //function to convert url to name of film
+        cbFilmsTitle.setConverter(new StringConverter<Film>() {
+            @Override
+            public String toString(Film uni) {
+                return uni.getTittle();
+            }
+            @Override
+            // not used...
+            public Film fromString(String s) {
+                return null ;
+            }
+        });
+
     }
-    public ArrayList<Comment> getComments() {
+    public ArrayList<Comment> getComments(String url) {
 
         ArrayList<Comment> commentsList = new ArrayList<Comment>();
         try {
             int pageIterator = 1;
-            Document doc = Jsoup.connect(html + pageIterator).get();
+            Document doc = Jsoup.connect(url + pageIterator).get();
 
             Elements pageContent = doc.getElementsByClass("filmPage");
 
@@ -63,7 +84,7 @@ public class Controller {
                     commentsList.add(commentObject);
                 }
                 pageIterator++;
-                doc = Jsoup.connect(html + pageIterator).get();
+                doc = Jsoup.connect(url + pageIterator).get();
             }
         } catch (ExportException e) {
             e.printStackTrace();
@@ -118,7 +139,13 @@ public class Controller {
 
     @FXML
     private void clickETLButton (ActionEvent event) throws SQLException {
-        ArrayList<Comment> extractedList = Controller.this.getComments();
+        if ( cbFilmsTitle.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Select film");
+            alert.setHeaderText("Please, choose the film tittle");
+            alert.showAndWait();
+        }
+        ArrayList<Comment> extractedList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
         ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
         Integer deleteCounter = 0;
         for (int i = 0; i < tranformedList.size(); i++) {
@@ -137,8 +164,14 @@ public class Controller {
 
     @FXML
     private void clickExtractButton (ActionEvent event) throws SQLException {
+        if ( cbFilmsTitle.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Select film");
+            alert.setHeaderText("Please, choose the film tittle");
+            alert.showAndWait();
+        }
         try {
-            extractedCommentsList = Controller.this.getComments();
+            extractedCommentsList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Extract procedure");
@@ -211,5 +244,30 @@ public class Controller {
         bTransform.setDisable(true);
         bLoad.setDisable(true);
         bExtract.setDisable(false);
+    }
+
+    public  ObservableList<Film> getFilmsLOV() throws IOException {
+
+        try {
+            Document doc = Jsoup.connect(top500html).get();
+            Elements rankingListPage = doc.getElementsByClass("item");
+
+            ObservableList<Film> filmsTitles = observableArrayList();
+
+            for (Element rankingList : rankingListPage) {
+                Film filmObject = new Film();
+
+                filmObject.setTittle(rankingList.select(".film__link").html()); //film tittle
+                filmObject.setUrl("https://www.filmweb.pl" + rankingList.select(".film__link").attr("href") + "/discussion?plusMinus=false&page=");
+
+                if (!filmObject.getTittle().equals("")){
+                    filmsTitles.add(filmObject);
+                }
+            }
+            return filmsTitles;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }
