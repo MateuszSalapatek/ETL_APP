@@ -144,22 +144,23 @@ public class Controller {
             alert.setTitle("Select film");
             alert.setHeaderText("Please, choose the film tittle");
             alert.showAndWait();
-        }
-        ArrayList<Comment> extractedList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
-        ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
-        Integer deleteCounter = 0;
-        for (int i = 0; i < tranformedList.size(); i++) {
-            Boolean load = loadCommentToDB(tranformedList.get(i));
-            if(!load){
-                deleteCounter++;
+        }else {
+            ArrayList<Comment> extractedList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
+            ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+            Integer deleteCounter = 0;
+            for (int i = 0; i < tranformedList.size(); i++) {
+                Boolean load = loadCommentToDB(tranformedList.get(i));
+                if (!load) {
+                    deleteCounter++;
+                }
             }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("ETL procedure");
+            alert.setHeaderText("ETL procedure finished successfully");
+            alert.setContentText("Quantity of extracted comments: " + extractedList.size() + "\n" +
+                    "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
+            alert.showAndWait();
         }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("ETL procedure");
-        alert.setHeaderText("ETL procedure finished successfully");
-        alert.setContentText("Quantity of extracted comments: " + extractedList.size()+"\n"+
-                "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
-        alert.showAndWait();
     }
 
     @FXML
@@ -169,21 +170,22 @@ public class Controller {
             alert.setTitle("Select film");
             alert.setHeaderText("Please, choose the film tittle");
             alert.showAndWait();
-        }
-        try {
-            extractedCommentsList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
+        }else {
+            try {
+                extractedCommentsList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Extract procedure");
-            alert.setHeaderText("Extract procedure finished successfully");
-            alert.setContentText("Quantity of extracted comments: " + extractedCommentsList.size());
-            alert.showAndWait();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Extract procedure");
+                alert.setHeaderText("Extract procedure finished successfully");
+                alert.setContentText("Quantity of extracted comments: " + extractedCommentsList.size());
+                alert.showAndWait();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        bTransform.setDisable(false);
-        bExtract.setDisable(true);
+            bTransform.setDisable(false);
+            bExtract.setDisable(true);
+        }
     }
 
     @FXML
