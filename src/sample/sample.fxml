@@ -23,5 +23,6 @@
       <Button fx:id="bTransform" disable="true" mnemonicParsing="false" onAction="#clickTransformButton" text="Transform Data" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <Button fx:id="bLoad" disable="true" mnemonicParsing="false" onAction="#clickLoadButton" text="Load Data" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <ChoiceBox fx:id="cbFilmsTitle" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <Button mnemonicParsing="false" onAction="#clickClearDatabase" text="Clear Database" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

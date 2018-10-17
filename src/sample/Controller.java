@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
@@ -22,8 +23,15 @@ import java.util.ArrayList;
 import static javafx.collections.FXCollections.observableArrayList;
 import static sample.OracleConn.conn;
 import static sample.OracleConn.pstmt;
+import static sample.OracleConn.stat;
 
 public class Controller {
+
+    //TODO wyczyszczenie danych z bazy
+    //TODO aktualizacja danych ....filmy czy all?
+    //TODO wyświetlanie danych
+    //TODO export
+
 
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
@@ -270,6 +278,45 @@ public class Controller {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @FXML
+    private void clickClearDatabase () throws SQLException {
+        try {
+            int count = 0;
+
+            stat = conn.createStatement();
+            ResultSet rs = stat.executeQuery("SELECT COUNT(*) FROM COMMENTS");
+            while (rs.next()) {
+                count = rs.getInt(1);
+            }
+            if (count == 0){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Database");
+                alert.setHeaderText("The database is empty");
+                alert.showAndWait();
+            }else{
+                conn.setAutoCommit(false);
+                pstmt = conn.prepareStatement("DELETE FROM COMMENTS WHERE 1=1");
+                pstmt.execute();
+                pstmt.close();
+                conn.commit();
+                conn.setAutoCommit(true);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Database");
+                alert.setHeaderText("Database has been cleared");
+                alert.setContentText(count + " rows has been removed");
+                alert.showAndWait();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
     }
 }
