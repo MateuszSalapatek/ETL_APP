@@ -1,10 +1,13 @@
 package sample;
 
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.util.StringConverter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,39 +15,61 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.rmi.server.ExportException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
+import static javafx.collections.FXCollections.observableArrayList;
 import static sample.OracleConn.conn;
 import static sample.OracleConn.pstmt;
+import static sample.OracleConn.stat;
 
 public class Controller {
 
-    private static String html = "https://www.filmweb.pl/Shrek/discussion?plusMinus=false&page=";
-    ArrayList<Comment> extractedCommentsList;
-    ArrayList<Comment> transformedCommentsList;
+    //TODO aktualizacja danych ....filmy czy all?
+    //TODO wyświetlanie danych
+    //TODO export
+    //TODO extract na - ilośc odpowiedzi na komentarz, kto ostatni odpowiedział, kiedy, liczba plusów i minusów pod komentarzem
+
+
+
+    private static String top500html = "https://www.filmweb.pl/ranking/film";
+    private ArrayList<Comment> extractedCommentsList;
+    private ArrayList<Comment> transformedCommentsList;
 
     @FXML
     private Button bELT, bExtract, bTransform, bLoad;
 
     @FXML
+    private ChoiceBox cbFilmsTitle;
+
+    @FXML
     private void initialize() throws IOException, SQLException {
         OracleConn Oracle = new OracleConn();
 
+        cbFilmsTitle.getItems().setAll(getFilmsLOV());
 
-        // TODO jak pobrać wartość id?
-        // TODO niektórzy nie oceniają
-        // TODO uzytkownik może być usunięty
-        // TODO na dacie 0200 i 0100 to chyba strefy czasowe, więc będzie trzeba dodać przy transformie
+        //function to convert url to name of film
+        cbFilmsTitle.setConverter(new StringConverter<Film>() {
+            @Override
+            public String toString(Film uni) {
+                return uni.getTittle();
+            }
+            @Override
+            // not used...
+            public Film fromString(String s) {
+                return null ;
+            }
+        });
 
     }
-    public ArrayList<Comment> getComments() {
+    public ArrayList<Comment> getComments(String url) {
 
         ArrayList<Comment> commentsList = new ArrayList<Comment>();
         try {
             int pageIterator = 1;
-            Document doc = Jsoup.connect(html + pageIterator).get();
+            Document doc = Jsoup.connect(url + pageIterator).get();
 
             Elements pageContent = doc.getElementsByClass("filmPage");
 
@@ -71,13 +96,18 @@ public class Controller {
                     commentsList.add(commentObject);
                 }
                 pageIterator++;
-                doc = Jsoup.connect(html + pageIterator).get();
+                doc = Jsoup.connect(url + pageIterator).get();
             }
         } catch (ExportException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-            e.getMessage();
+            if (e.getMessage().equals("HTTP error fetching URL")){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Wrong page");
+                alert.setHeaderText("The page for following URL not found");
+                alert.showAndWait();
+            }
         }
         return commentsList;
     }
@@ -128,73 +158,176 @@ public class Controller {
 
     @FXML
     private void clickETLButton (ActionEvent event) throws SQLException {
-        ArrayList<Comment> extractedList = Controller.this.getComments();
-        ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
-        for (int i = 0; i < tranformedList.size(); i++) {
-            Controller.this.loadCommentToDB(tranformedList.get(i));
+        if ( cbFilmsTitle.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Select film");
+            alert.setHeaderText("Please, choose the film tittle");
+            alert.showAndWait();
+        }else {
+            ArrayList<Comment> extractedList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
+            ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+            Integer deleteCounter = 0;
+            for (int i = 0; i < tranformedList.size(); i++) {
+                Boolean load = loadCommentToDB(tranformedList.get(i));
+                if (!load) {
+                    deleteCounter++;
+                }
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("ETL procedure");
+            alert.setHeaderText("ETL procedure finished successfully");
+            alert.setContentText("Quantity of extracted comments: " + extractedList.size() + "\n" +
+                    "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
+            alert.showAndWait();
         }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("ETL procedure");
-        alert.setHeaderText("ETL procedure finished successfully");
-        alert.setContentText("Quantity of extracted comments: " + extractedList.size()+"\n"+
-                "Quantity of loaded comments: " + tranformedList.size());
-        alert.showAndWait();
     }
 
     @FXML
     private void clickExtractButton (ActionEvent event) throws SQLException {
-        extractedCommentsList = Controller.this.getComments();
+        if ( cbFilmsTitle.getValue() == null){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Select film");
+            alert.setHeaderText("Please, choose the film tittle");
+            alert.showAndWait();
+        }else {
+            try {
+                extractedCommentsList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Extract procedure");
-        alert.setHeaderText("Extract procedure finished successfully");
-        alert.setContentText("Quantity of extracted comments: " + extractedCommentsList.size());
-        alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Extract procedure");
+                alert.setHeaderText("Extract procedure finished successfully");
+                alert.setContentText("Quantity of extracted comments: " + extractedCommentsList.size());
+                alert.showAndWait();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        bTransform.setDisable(false);
-        bExtract.setDisable(true);
+            bTransform.setDisable(false);
+            bExtract.setDisable(true);
+        }
     }
 
     @FXML
     private void clickTransformButton (ActionEvent event) throws SQLException {
-        if(!(extractedCommentsList.size()>0)){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Transform procedure");
-            alert.setHeaderText("Transform is not possible, because no data hes been extracted");
-            alert.showAndWait();
-        }else{
-            transformedCommentsList = transformComments(extractedCommentsList);
+        try {
+            if (!(extractedCommentsList.size() > 0)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Transform procedure");
+                alert.setHeaderText("Transform is not possible, because no data hes been extracted");
+                alert.showAndWait();
+                bTransform.setDisable(true);
+                bExtract.setDisable(false);
+                extractedCommentsList.clear();
+                transformedCommentsList.clear();
+            } else {
+                transformedCommentsList = transformComments(extractedCommentsList);
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Transform procedure");
-            alert.setHeaderText("Transform procedure finished successfully");
-            alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Transform procedure");
+                alert.setHeaderText("Transform procedure finished successfully");
+                alert.showAndWait();
+                bTransform.setDisable(true);
+                bLoad.setDisable(false);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        bTransform.setDisable(true);
-        bLoad.setDisable(false);
     }
 
     @FXML
     private void clickLoadButton (ActionEvent event) throws SQLException {
-        if(!(transformedCommentsList.size()>0)){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Load procedure");
-            alert.setHeaderText("Load is not possible, because no data found after transforming");
-            alert.showAndWait();
-        }else{
-            for (int i = 0; i < transformedCommentsList.size(); i++) {
-                Controller.this.loadCommentToDB(transformedCommentsList.get(i));
+        try {
+            if (!(transformedCommentsList.size() > 0)) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Load procedure");
+                alert.setHeaderText("Load is not possible, because no data found after transforming");
+                alert.showAndWait();
+            } else {
+                Integer deleteCounter = 0;
+                for (int i = 0; i < transformedCommentsList.size(); i++) {
+                    Boolean load = loadCommentToDB(transformedCommentsList.get(i));
+                    if(!load){
+                        deleteCounter++;
+                    }
+                }
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Load procedure");
+                alert.setHeaderText("Load procedure finished successfully");
+                alert.setContentText("Quantity of loaded comments: " + (transformedCommentsList.size() - deleteCounter));
+                alert.showAndWait();
             }
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Load procedure");
-            alert.setHeaderText("Load procedure finished successfully");
-            alert.setContentText("Quantity of loaded comments: " + transformedCommentsList.size());
-            alert.showAndWait();
+        }catch (Exception e){
+            e.printStackTrace();
         }
         transformedCommentsList.clear();
         extractedCommentsList.clear();
         bTransform.setDisable(true);
         bLoad.setDisable(true);
         bExtract.setDisable(false);
+    }
+
+    public  ObservableList<Film> getFilmsLOV() throws IOException {
+
+        try {
+            Document doc = Jsoup.connect(top500html).get();
+            Elements rankingListPage = doc.getElementsByClass("item");
+
+            ObservableList<Film> filmsTitles = observableArrayList();
+
+            for (Element rankingList : rankingListPage) {
+                Film filmObject = new Film();
+
+                filmObject.setTittle(rankingList.select(".film__link").html()); //film tittle
+                filmObject.setUrl("https://www.filmweb.pl" + rankingList.select(".film__link").attr("href") + "/discussion?plusMinus=false&page=");
+
+                if (!filmObject.getTittle().equals("")){
+                    filmsTitles.add(filmObject);
+                }
+            }
+            return filmsTitles;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @FXML
+    private void clickClearDatabase () throws SQLException {
+        try {
+            int count = 0;
+
+            stat = conn.createStatement();
+            ResultSet rs = stat.executeQuery("SELECT COUNT(*) FROM COMMENTS");
+            while (rs.next()) {
+                count = rs.getInt(1);
+            }
+            if (count == 0){
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Database");
+                alert.setHeaderText("The database is empty");
+                alert.showAndWait();
+            }else{
+                conn.setAutoCommit(false);
+                pstmt = conn.prepareStatement("DELETE FROM COMMENTS WHERE 1=1");
+                pstmt.execute();
+                pstmt.close();
+                conn.commit();
+                conn.setAutoCommit(true);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Database");
+                alert.setHeaderText("Database has been cleared");
+                alert.setContentText(count + " rows has been removed");
+                alert.showAndWait();
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 }
