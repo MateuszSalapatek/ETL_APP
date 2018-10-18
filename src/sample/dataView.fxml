@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.DataViewController">
+   <children>
+      <TableView fx:id="tvDataView" prefHeight="600.0" prefWidth="1500.0">
+        <columns>
+          <TableColumn fx:id="tcId" prefWidth="75.0" text="ID" />
+          <TableColumn fx:id="tcAuthor" prefWidth="75.0" text="AUTHOR" />
+            <TableColumn prefWidth="150.0" text="COMMENT TITTLE" />
+            <TableColumn fx:id="tcCommentContent" minWidth="0.0" prefWidth="0.0" text="COMMENT" />
+            <TableColumn fx:id="tcFilmRate" prefWidth="75.0" text="FILM RATE" />
+            <TableColumn fx:id="tcCreationDate" prefWidth="75.0" text="CREATION DATE" />
+            <TableColumn fx:id="tcFilmTittle" prefWidth="75.0" text="FILM TITTLE" />
+            <TableColumn fx:id="tcFilmYear" prefWidth="75.0" text="FILM YEAR" />
+            <TableColumn fx:id="tcFilmTime" prefWidth="75.0" text="FILM TIME" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
