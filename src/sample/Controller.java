@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -42,16 +43,16 @@ public class Controller {
     private Button bELT, bExtract, bTransform, bLoad;
 
     @FXML
-    private ChoiceBox cbFilmsTitle;
+    private ComboBox cbPickFilm;
 
     @FXML
     private void initialize() throws IOException, SQLException {
         OracleConn Oracle = new OracleConn();
 
-        cbFilmsTitle.getItems().setAll(getFilmsLOV());
+        cbPickFilm.getItems().setAll(getFilmsLOV());
 
         //function to convert url to name of film
-        cbFilmsTitle.setConverter(new StringConverter<Film>() {
+        cbPickFilm.setConverter(new StringConverter<Film>() {
             @Override
             public String toString(Film uni) {
                 return uni.getTittle();
@@ -158,13 +159,13 @@ public class Controller {
 
     @FXML
     private void clickETLButton (ActionEvent event) throws SQLException {
-        if ( cbFilmsTitle.getValue() == null){
+        if ( cbPickFilm.getValue() == null){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Select film");
             alert.setHeaderText("Please, choose the film tittle");
             alert.showAndWait();
         }else {
-            ArrayList<Comment> extractedList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
+            ArrayList<Comment> extractedList = Controller.this.getComments(cbPickFilm.getValue().toString());
             ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
             Integer deleteCounter = 0;
             for (int i = 0; i < tranformedList.size(); i++) {
@@ -184,14 +185,14 @@ public class Controller {
 
     @FXML
     private void clickExtractButton (ActionEvent event) throws SQLException {
-        if ( cbFilmsTitle.getValue() == null){
+        if ( cbPickFilm.getValue() == null){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Select film");
             alert.setHeaderText("Please, choose the film tittle");
             alert.showAndWait();
         }else {
             try {
-                extractedCommentsList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
+                extractedCommentsList = Controller.this.getComments(cbPickFilm.getValue().toString());
 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Extract procedure");

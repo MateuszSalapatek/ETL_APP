@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -22,7 +22,7 @@
       <Button fx:id="bExtract" mnemonicParsing="false" onAction="#clickExtractButton" text="Extract Data" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <Button fx:id="bTransform" disable="true" mnemonicParsing="false" onAction="#clickTransformButton" text="Transform Data" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <Button fx:id="bLoad" disable="true" mnemonicParsing="false" onAction="#clickLoadButton" text="Load Data" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-      <ChoiceBox fx:id="cbFilmsTitle" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
       <Button mnemonicParsing="false" onAction="#clickClearDatabase" text="Clear Database" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+       <ComboBox fx:id="cbPickFilm" prefWidth="150.0" promptText="Wybierz film" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
    </children>
 </GridPane>
