@@ -4,6 +4,7 @@ package sample;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -29,10 +30,13 @@ import static sample.OracleConn.stat;
 
 public class Controller {
 
+    //TODO przeszukiwanie listy filmów
     //TODO aktualizacja danych ....filmy czy all?
     //TODO wyświetlanie danych
     //TODO export
     //TODO extract na - ilośc odpowiedzi na komentarz, kto ostatni odpowiedział, kiedy, liczba plusów i minusów pod komentarzem
+    //TODO poprawić alerty, dodać wszędzie try catche
+    //TODO plik z językiem
 
 
 
@@ -349,6 +353,10 @@ public class Controller {
             alert.showAndWait();
         }
     }
+    @FXML
+    private void clickOpenTableView () throws SQLException {
+    }
+
 
     @FXML
     private void clickETLButtonAll (ActionEvent event) throws SQLException {
