@@ -4,7 +4,10 @@ package sample;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.util.StringConverter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,6 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static sample.OracleConn.conn;
@@ -43,16 +48,29 @@ public class Controller {
     private Button bELT, bExtract, bTransform, bLoad;
 
     @FXML
-    private ChoiceBox cbFilmsTitle;
+    private ComboBox cbPickFilm;
 
     @FXML
     private void initialize() throws IOException, SQLException {
         OracleConn Oracle = new OracleConn();
 
-        cbFilmsTitle.getItems().setAll(getFilmsLOV());
+        ObservableList<Film> filmsList;
+        filmsList = getFilmsLOV();
+
+//        for (int i = 0; i<filmsList.size(); i++){
+//            if (filmsList.get(i).getTittle().substring(0, 1).equals("N")) {
+//                System.out.println("dupa: "+filmsList.get(i).getTittle());
+//            }else{
+//                System.out.println(filmsList.get(i).getTittle());
+//                filmsList.remove(filmsList.get(i));
+//            }
+//        }
+
+
+        cbPickFilm.getItems().setAll(filmsList);
 
         //function to convert url to name of film
-        cbFilmsTitle.setConverter(new StringConverter<Film>() {
+        cbPickFilm.setConverter(new StringConverter<Film>() {
             @Override
             public String toString(Film uni) {
                 return uni.getTittle();
@@ -62,6 +80,10 @@ public class Controller {
             public Film fromString(String s) {
                 return null ;
             }
+        });
+
+        cbPickFilm.setOnKeyTyped(event -> {
+            System.out.println(event.getCharacter());
         });
 
     }
@@ -159,13 +181,13 @@ public class Controller {
 
     @FXML
     private void clickETLButton (ActionEvent event) throws SQLException {
-        if ( cbFilmsTitle.getValue() == null){
+        if ( cbPickFilm.getValue() == null){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Select film");
             alert.setHeaderText("Please, choose the film tittle");
             alert.showAndWait();
         }else {
-            ArrayList<Comment> extractedList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
+            ArrayList<Comment> extractedList = Controller.this.getComments(cbPickFilm.getValue().toString());
             ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
             Integer deleteCounter = 0;
             for (int i = 0; i < tranformedList.size(); i++) {
@@ -185,14 +207,14 @@ public class Controller {
 
     @FXML
     private void clickExtractButton (ActionEvent event) throws SQLException {
-        if ( cbFilmsTitle.getValue() == null){
+        if ( cbPickFilm.getValue() == null){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Select film");
             alert.setHeaderText("Please, choose the film tittle");
             alert.showAndWait();
         }else {
             try {
-                extractedCommentsList = Controller.this.getComments(cbFilmsTitle.getValue().toString());
+                extractedCommentsList = Controller.this.getComments(cbPickFilm.getValue().toString());
 
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Extract procedure");
@@ -333,6 +355,65 @@ public class Controller {
     }
     @FXML
     private void clickOpenTableView () throws SQLException {
+    }
 
+
+    @FXML
+    private void clickETLButtonAll (ActionEvent event) throws SQLException {
+        try{
+
+            ObservableList<Film> filmsList;
+            filmsList = getFilmsLOV();
+
+        for ( int i = 0; i<filmsList.size(); i++){
+            ArrayList<Comment> extractedList = Controller.this.getComments(filmsList.get(i).getUrl());
+            ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+            Integer deleteCounter = 0;
+            for (int j = 0; j < tranformedList.size(); j++) {
+                Boolean load = loadCommentToDB(tranformedList.get(j));
+                if (!load) {
+                    deleteCounter++;
+                }
+            }
+            System.out.println("Linia: "+i+", pobrano " + extractedList.size()+ "komentarzy");
+        }
+
+//        for (int i = 0; i<extractedList.size(); i++){
+//            tranformedList.add(extractedList.get(i));
+//        }
+//
+//        for (int i = 0; i < tranformedList.size(); i++) {
+//            for ( int j = 0; j<tranformedList.get(i).size(); j++){
+//                loadCommentToDB(tranformedList.get(i).get(j));
+//            }
+//
+//        }
+//
+//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//        alert.setTitle("ETL procedure");
+//        alert.setHeaderText("ETL procedure finished successfully");
+//        alert.showAndWait();
+
+
+
+//
+//            ArrayList<Comment> extractedList = Controller.this.getComments(cbPickFilm.getValue().toString());
+//            ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+//            Integer deleteCounter = 0;
+//            for (int i = 0; i < tranformedList.size(); i++) {
+//                Boolean load = loadCommentToDB(tranformedList.get(i));
+//                if (!load) {
+//                    deleteCounter++;
+//                }
+//            }
+//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            alert.setTitle("ETL procedure");
+//            alert.setHeaderText("ETL procedure finished successfully");
+//            alert.setContentText("Quantity of extracted comments: " + extractedList.size() + "\n" +
+//                    "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
+//            alert.showAndWait();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -119,4 +119,9 @@ public class Comment {
     public void setFilmTimeTransformed(String filmTitleTransformed) {
         this.filmTimeTransformed = filmTitleTransformed;
     }
+
+    @Override
+    public String toString() {
+        return title +"  "+id;
+    }
 }

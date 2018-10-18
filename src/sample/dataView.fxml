@@ -17,6 +17,7 @@
             <TableColumn fx:id="tcFilmTittle" prefWidth="75.0" text="FILM TITTLE" />
             <TableColumn fx:id="tcFilmYear" prefWidth="75.0" text="FILM YEAR" />
             <TableColumn fx:id="tcFilmTime" prefWidth="75.0" text="FILM TIME" />
+
         </columns>
       </TableView>
    </children>
