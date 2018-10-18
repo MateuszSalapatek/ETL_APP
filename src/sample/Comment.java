@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 
 import static sample.OracleConn.*;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -136,7 +137,7 @@ public class Comment {
         return title +"  "+id;
     }
 
-    public ObservableList getViewComment() throws SQLException {
+    public ObservableList<Comment> getViewComment() throws SQLException {
         ObservableList<Comment> commentViewList = FXCollections.observableArrayList();
         stat = conn.createStatement();
         try {
@@ -170,8 +171,7 @@ public class Comment {
             alert.setHeaderText("Unexpected error - contact with administrator");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-        }
-        finally{
+        } finally{
             try{
                 if(stat!=null)
                     stat.close();

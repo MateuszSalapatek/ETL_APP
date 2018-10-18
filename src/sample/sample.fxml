@@ -26,5 +26,6 @@
       <Button mnemonicParsing="false" onAction="#clickOpenTableView" text="Table View" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
        <ComboBox fx:id="cbPickFilm" prefWidth="150.0" promptText="Wybierz film" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
       <Button fx:id="bETL1" layoutX="293.0" layoutY="198.0" mnemonicParsing="false" onAction="#clickETLButtonAll" text="ETL ALL" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <Button mnemonicParsing="false" onAction="#clickExportCSV" text="Export CSV" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

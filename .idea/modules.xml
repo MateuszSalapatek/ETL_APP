@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ETL_APP.iml" filepath="$PROJECT_DIR$/ETL_APP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app_etl/app_etl.iml" filepath="$PROJECT_DIR$/app_etl/app_etl.iml" />
     </modules>
   </component>
 </project>

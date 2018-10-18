@@ -4,7 +4,6 @@ package sample;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -15,12 +14,18 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.apache.commons.csv.CSVPrinter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import org.apache.commons.csv.CSVFormat;
+
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.rmi.server.ExportException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,9 +33,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import static javafx.collections.FXCollections.observableArrayList;
-import static sample.OracleConn.conn;
-import static sample.OracleConn.pstmt;
-import static sample.OracleConn.stat;
+import static sample.OracleConn.*;
+
+
 
 public class Controller {
 
@@ -42,7 +47,7 @@ public class Controller {
     //TODO poprawić alerty, dodać wszędzie try catche
     //TODO plik z językiem
     //TODO poprawić datę = 0100, 0200
-
+    //TODO jak zrobić progress bar??
 
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
@@ -62,16 +67,6 @@ public class Controller {
         ObservableList<Film> filmsList;
         filmsList = getFilmsLOV();
 
-//        for (int i = 0; i<filmsList.size(); i++){
-//            if (filmsList.get(i).getTittle().substring(0, 1).equals("N")) {
-//                System.out.println("dupa: "+filmsList.get(i).getTittle());
-//            }else{
-//                System.out.println(filmsList.get(i).getTittle());
-//                filmsList.remove(filmsList.get(i));
-//            }
-//        }
-
-
         cbPickFilm.getItems().setAll(filmsList);
 
         //function to convert url to name of film
@@ -80,18 +75,17 @@ public class Controller {
             public String toString(Film uni) {
                 return uni.getTittle();
             }
+
             @Override
             // not used...
             public Film fromString(String s) {
-                return null ;
+                return null;
             }
         });
 
-        cbPickFilm.setOnKeyTyped(event -> {
-            System.out.println(event.getCharacter());
-        });
 
     }
+
     public ArrayList<Comment> getComments(String url) {
 
         ArrayList<Comment> commentsList = new ArrayList<Comment>();
@@ -116,9 +110,9 @@ public class Controller {
                     commentObject.setCommentTitle(filmCategory.select(".s-16 a").html());
                     commentObject.setFilmRate(filmCategory.select(".topicInfo li:nth-child(3)").html());
                     commentObject.setFilmYear(pageContent.select(".halfSize").html());
-                    commentObject.setFilmTime(pageContent.select(".filmTime").html().substring(0,15));
+                    commentObject.setFilmTime(pageContent.select(".filmTime").html().substring(0, 15));
 
-                    if(commentObject.getCommentContent().equals("")){
+                    if (commentObject.getCommentContent().equals("")) {
                         commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
                     }
                     commentsList.add(commentObject);
@@ -130,7 +124,7 @@ public class Controller {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-            if (e.getMessage().equals("HTTP error fetching URL")){
+            if (e.getMessage().equals("HTTP error fetching URL")) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Wrong page");
                 alert.setHeaderText("The page for following URL not found");
@@ -158,26 +152,25 @@ public class Controller {
         } catch (SQLIntegrityConstraintViolationException e) {
             //duplicate id
             return false;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
-        finally{
-            try{
-                if(pstmt!=null)
+        } finally {
+            try {
+                if (pstmt != null)
                     pstmt.close();
-            }catch(SQLException se){
+            } catch (SQLException se) {
                 se.printStackTrace();
             }
         }
     }
 
-    public ArrayList<Comment> transformComments(ArrayList<Comment> commentList){
+    public ArrayList<Comment> transformComments(ArrayList<Comment> commentList) {
 
-        for ( int i = 0; i<commentList.size(); i++ ){
+        for (int i = 0; i < commentList.size(); i++) {
             commentList.get(i).setIdTransformed(Integer.parseInt(commentList.get(i).getId().replaceAll("[^0-9]", ""))); //to delete chars
             commentList.get(i).setFilmRateTransformed(commentList.get(i).getFilmRate().replaceAll("[^0-9]", ""));
-            commentList.get(i).setFilmYearTransformed(Integer.parseInt(commentList.get(i).getFilmYear().replaceAll("[^0-9]","")));
+            commentList.get(i).setFilmYearTransformed(Integer.parseInt(commentList.get(i).getFilmYear().replaceAll("[^0-9]", "")));
 
         }
 
@@ -185,13 +178,13 @@ public class Controller {
     }
 
     @FXML
-    private void clickETLButton (ActionEvent event) throws SQLException {
-        if ( cbPickFilm.getValue() == null){
+    private void clickETLButton(ActionEvent event) throws SQLException {
+        if (cbPickFilm.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Select film");
             alert.setHeaderText("Please, choose the film tittle");
             alert.showAndWait();
-        }else {
+        } else {
             ArrayList<Comment> extractedList = Controller.this.getComments(cbPickFilm.getValue().toString());
             ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
             Integer deleteCounter = 0;
@@ -211,13 +204,13 @@ public class Controller {
     }
 
     @FXML
-    private void clickExtractButton (ActionEvent event) throws SQLException {
-        if ( cbPickFilm.getValue() == null){
+    private void clickExtractButton(ActionEvent event) throws SQLException {
+        if (cbPickFilm.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Select film");
             alert.setHeaderText("Please, choose the film tittle");
             alert.showAndWait();
-        }else {
+        } else {
             try {
                 extractedCommentsList = Controller.this.getComments(cbPickFilm.getValue().toString());
 
@@ -236,7 +229,7 @@ public class Controller {
     }
 
     @FXML
-    private void clickTransformButton (ActionEvent event) throws SQLException {
+    private void clickTransformButton(ActionEvent event) throws SQLException {
         try {
             if (!(extractedCommentsList.size() > 0)) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -257,13 +250,13 @@ public class Controller {
                 bTransform.setDisable(true);
                 bLoad.setDisable(false);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    private void clickLoadButton (ActionEvent event) throws SQLException {
+    private void clickLoadButton(ActionEvent event) throws SQLException {
         try {
             if (!(transformedCommentsList.size() > 0)) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -274,7 +267,7 @@ public class Controller {
                 Integer deleteCounter = 0;
                 for (int i = 0; i < transformedCommentsList.size(); i++) {
                     Boolean load = loadCommentToDB(transformedCommentsList.get(i));
-                    if(!load){
+                    if (!load) {
                         deleteCounter++;
                     }
                 }
@@ -285,7 +278,7 @@ public class Controller {
                 alert.setContentText("Quantity of loaded comments: " + (transformedCommentsList.size() - deleteCounter));
                 alert.showAndWait();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         transformedCommentsList.clear();
@@ -295,7 +288,7 @@ public class Controller {
         bExtract.setDisable(false);
     }
 
-    public  ObservableList<Film> getFilmsLOV() throws IOException {
+    public ObservableList<Film> getFilmsLOV() throws IOException {
 
         try {
             Document doc = Jsoup.connect(top500html).get();
@@ -309,19 +302,19 @@ public class Controller {
                 filmObject.setTittle(rankingList.select(".film__link").html()); //film tittle
                 filmObject.setUrl("https://www.filmweb.pl" + rankingList.select(".film__link").attr("href") + "/discussion?plusMinus=false&page=");
 
-                if (!filmObject.getTittle().equals("")){
+                if (!filmObject.getTittle().equals("")) {
                     filmsTitles.add(filmObject);
                 }
             }
             return filmsTitles;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
     @FXML
-    private void clickClearDatabase () throws SQLException {
+    private void clickClearDatabase() throws SQLException {
         try {
             int count = 0;
 
@@ -330,12 +323,12 @@ public class Controller {
             while (rs.next()) {
                 count = rs.getInt(1);
             }
-            if (count == 0){
+            if (count == 0) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Database");
                 alert.setHeaderText("The database is empty");
                 alert.showAndWait();
-            }else{
+            } else {
                 conn.setAutoCommit(false);
                 pstmt = conn.prepareStatement("DELETE FROM COMMENTS WHERE 1=1");
                 pstmt.execute();
@@ -349,7 +342,7 @@ public class Controller {
                 alert.setContentText(count + " rows has been removed");
                 alert.showAndWait();
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Unexpected error");
@@ -358,8 +351,9 @@ public class Controller {
             alert.showAndWait();
         }
     }
+
     @FXML
-    private void clickOpenTableView () throws SQLException {
+    private void clickOpenTableView() throws SQLException {
 
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader();
@@ -403,13 +397,13 @@ public class Controller {
 
 
     @FXML
-    private void clickETLButtonAll (ActionEvent event) throws SQLException {
-        try{
+    private void clickETLButtonAll(ActionEvent event) throws SQLException {
+        try {
 
             ObservableList<Film> filmsList;
             filmsList = getFilmsLOV();
 
-            for ( int i = 0; i<filmsList.size(); i++){
+            for (int i = 0; i < filmsList.size(); i++) {
                 ArrayList<Comment> extractedList = Controller.this.getComments(filmsList.get(i).getUrl());
                 ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
                 Integer deleteCounter = 0;
@@ -419,10 +413,34 @@ public class Controller {
                         deleteCounter++;
                     }
                 }
-                System.out.println("Linia: "+i+", pobrano " + extractedList.size()+ "komentarzy");
+                System.out.println("Linia: " + i + ", pobrano " + extractedList.size() + "komentarzy");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void clickExportCSV(ActionEvent event) throws SQLException, IOException {
+
+
+        Comment com = new Comment();
+        BufferedWriter writer = Files.newBufferedWriter(Paths.get(String.valueOf(javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory())+"\\Comments.csv"));
+
+        CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                .withHeader("ID", "AUTHOR", "COMMENT TITTLE", "COMMENT", "FILM RATE", "CREATION DATE", "FILM TITTLE", "FILM YEAR", "FILM TIME"));
+
+        for ( int i = 0; i < com.getViewComment().size(); i++ ){
+            csvPrinter.printRecord(com.getViewComment().get(i).getIdTransformed(), com.getViewComment().get(i).getUser(), com.getViewComment().get(i).getCommentTitle(),
+                    com.getViewComment().get(i).getCommentContent(), com.getViewComment().get(i).getFilmRate(), com.getViewComment().get(i).getCreationDate(),
+                    com.getViewComment().get(i).getTitle(), com.getViewComment().get(i).getFilmYear(), com.getViewComment().get(i).getFilmTime());
+        }
+        csvPrinter.flush();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Export procedure");
+        alert.setHeaderText("Export procedure finished successfully");
+        alert.setContentText("Path for exported csv file is: " + String.valueOf(javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory())+"\\Comments.csv");
+        alert.showAndWait();
     }
 }
