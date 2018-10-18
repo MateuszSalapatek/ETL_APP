@@ -5,9 +5,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,8 +26,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static sample.OracleConn.conn;
@@ -37,6 +41,7 @@ public class Controller {
     //TODO extract na - ilośc odpowiedzi na komentarz, kto ostatni odpowiedział, kiedy, liczba plusów i minusów pod komentarzem
     //TODO poprawić alerty, dodać wszędzie try catche
     //TODO plik z językiem
+    //TODO poprawić datę = 0100, 0200
 
 
 
@@ -355,6 +360,45 @@ public class Controller {
     }
     @FXML
     private void clickOpenTableView () throws SQLException {
+
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader();
+        Pane root = null;
+
+        ////////////////////////////////
+        //to maximalize window
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+        stage.setX(bounds.getMinX());
+        stage.setY(bounds.getMinY());
+        stage.setWidth(bounds.getWidth());
+        stage.setHeight(bounds.getHeight());
+        /////////////////////////////////
+
+        try {
+            root = loader.load(getClass().getResource("dataView.fxml").openStream());
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            e.printStackTrace();
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+        dataViewController trDataView = (dataViewController) loader.getController();
+        stage.setTitle("Data View");
+        stage.setScene(new Scene(root));
+        stage.show();
+        try {
+            trDataView.showDataView();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 
 
@@ -365,53 +409,18 @@ public class Controller {
             ObservableList<Film> filmsList;
             filmsList = getFilmsLOV();
 
-        for ( int i = 0; i<filmsList.size(); i++){
-            ArrayList<Comment> extractedList = Controller.this.getComments(filmsList.get(i).getUrl());
-            ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
-            Integer deleteCounter = 0;
-            for (int j = 0; j < tranformedList.size(); j++) {
-                Boolean load = loadCommentToDB(tranformedList.get(j));
-                if (!load) {
-                    deleteCounter++;
+            for ( int i = 0; i<filmsList.size(); i++){
+                ArrayList<Comment> extractedList = Controller.this.getComments(filmsList.get(i).getUrl());
+                ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+                Integer deleteCounter = 0;
+                for (int j = 0; j < tranformedList.size(); j++) {
+                    Boolean load = loadCommentToDB(tranformedList.get(j));
+                    if (!load) {
+                        deleteCounter++;
+                    }
                 }
+                System.out.println("Linia: "+i+", pobrano " + extractedList.size()+ "komentarzy");
             }
-            System.out.println("Linia: "+i+", pobrano " + extractedList.size()+ "komentarzy");
-        }
-
-//        for (int i = 0; i<extractedList.size(); i++){
-//            tranformedList.add(extractedList.get(i));
-//        }
-//
-//        for (int i = 0; i < tranformedList.size(); i++) {
-//            for ( int j = 0; j<tranformedList.get(i).size(); j++){
-//                loadCommentToDB(tranformedList.get(i).get(j));
-//            }
-//
-//        }
-//
-//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-//        alert.setTitle("ETL procedure");
-//        alert.setHeaderText("ETL procedure finished successfully");
-//        alert.showAndWait();
-
-
-
-//
-//            ArrayList<Comment> extractedList = Controller.this.getComments(cbPickFilm.getValue().toString());
-//            ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
-//            Integer deleteCounter = 0;
-//            for (int i = 0; i < tranformedList.size(); i++) {
-//                Boolean load = loadCommentToDB(tranformedList.get(i));
-//                if (!load) {
-//                    deleteCounter++;
-//                }
-//            }
-//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-//            alert.setTitle("ETL procedure");
-//            alert.setHeaderText("ETL procedure finished successfully");
-//            alert.setContentText("Quantity of extracted comments: " + extractedList.size() + "\n" +
-//                    "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
-//            alert.showAndWait();
         }catch (Exception e){
             e.printStackTrace();
         }
