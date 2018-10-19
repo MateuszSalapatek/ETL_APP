@@ -1,4 +1,4 @@
-CREATE SEQUENCE id_seq START WITH 1;
+
 
 CREATE TABLE COMMENTS (
                         id NUMBER  PRIMARY KEY  ,
@@ -7,6 +7,10 @@ CREATE TABLE COMMENTS (
                         commentContent VARCHAR2(4000),
                         filmRate VARCHAR2(4000),
                         creationDate VARCHAR2(4000),
+                        commentRate VARCHAR2(4000),
+                        commentAnswersCount VARCHAR2(4000),
+                        commentAnswersLastUser VARCHAR2(4000),
+                        commentAnswersLastDate VARCHAR2(4000),
                         filmTittle VARCHAR2(4000),
                         filmYear NUMBER,
                         filmTime VARCHAR2(4000),
