@@ -28,10 +28,16 @@ public class Comment {
     private String filmTime;
     private String filmTimeTransformed;
     private String commentRate;
+    private String commentAnswersCount;
+    private Integer commentAnswersCountTransformed;
 
     public String getUser() {
         return user;
     }
+
+    public String getCommentAnswersCount() { return commentAnswersCount; }
+
+    public Integer getCommentAnswersCountTransformed() { return commentAnswersCountTransformed; }
 
     public String getCommentRate() { return commentRate; }
 
@@ -136,6 +142,10 @@ public class Comment {
     }
 
     public void setCommentRate(String commentRate) { this.commentRate = commentRate; }
+
+    public void setCommentAnswersCount(String commentAnswersCount) { this.commentAnswersCount = commentAnswersCount; }
+
+    public void setCommentAnswersCountTransformed(Integer commentAnswersCountTransformed) { this.commentAnswersCountTransformed = commentAnswersCountTransformed; }
 
     @Override
     public String toString() {
