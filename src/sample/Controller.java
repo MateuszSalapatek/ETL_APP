@@ -110,7 +110,7 @@ public class Controller {
                     commentObject.setCommentTitle(filmCategory.select(".s-16 a").html());
                     commentObject.setFilmRate(filmCategory.select(".topicInfo li:nth-child(3)").html());
                     commentObject.setFilmYear(pageContent.select(".halfSize").html());
-                    commentObject.setFilmTime(pageContent.select(".filmTime").html().substring(0, 15));
+                    commentObject.setFilmTime(pageContent.select(".filmTime").attr("datetime"));
                     commentObject.setCommentRate(filmCategory.select(".plusCount").html());
                     commentObject.setCommentAnswersCount(filmCategory.getElementsByClass("topicAnswers").text());
                     commentObject.setCommentAnswersLastUser(filmCategory.getElementsByClass("userLink").text());
@@ -153,7 +153,7 @@ public class Controller {
             pstmt.setString(10, comment.getCommentAnswersLastDate());
             pstmt.setString(11, comment.getTitle());
             pstmt.setInt(12, comment.getFilmYearTransformed());
-            pstmt.setString(13, comment.getFilmTime());
+            pstmt.setString(13, comment.getFilmTimeTransformed());
             pstmt.execute();
             pstmt.close();
             return true;
@@ -180,7 +180,7 @@ public class Controller {
             commentList.get(i).setFilmRateTransformed(commentList.get(i).getFilmRate().replaceAll("[^0-9]", ""));
             commentList.get(i).setFilmYearTransformed(Integer.parseInt(commentList.get(i).getFilmYear().replaceAll("[^0-9]", "")));
             commentList.get(i).setCommentAnswersCountTransformed(commentList.get(i).getCommentAnswersCount().replaceAll("[^0-9]", ""));
-
+            commentList.get(i).setFilmTimeTransformed(commentList.get(i).getFilmTime().replaceAll("[^0-9]", ""));
         }
 
         return commentList;
