@@ -30,10 +30,13 @@ public class Comment {
     private String commentRate;
     private String commentAnswersCount;
     private String commentAnswersCountTransformed;
+    private String commentAnswersLastUser;
 
     public String getUser() {
         return user;
     }
+
+    public String getCommentAnswersLastUser() { return commentAnswersLastUser; }
 
     public String getCommentAnswersCount() { return commentAnswersCount; }
 
@@ -146,6 +149,8 @@ public class Comment {
     public void setCommentAnswersCount(String commentAnswersCount) { this.commentAnswersCount = commentAnswersCount; }
 
     public void setCommentAnswersCountTransformed(String commentAnswersCountTransformed) { this.commentAnswersCountTransformed = commentAnswersCountTransformed; }
+
+    public void setCommentAnswersLastUser(String commentAnswersLastUser) { this.commentAnswersLastUser = commentAnswersLastUser; }
 
     @Override
     public String toString() {
