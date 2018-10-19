@@ -111,6 +111,7 @@ public class Controller {
                     commentObject.setFilmRate(filmCategory.select(".topicInfo li:nth-child(3)").html());
                     commentObject.setFilmYear(pageContent.select(".halfSize").html());
                     commentObject.setFilmTime(pageContent.select(".filmTime").html().substring(0, 15));
+                    commentObject.setCommentRate(filmCategory.select(".plusCount").html());
 
                     if (commentObject.getCommentContent().equals("")) {
                         commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
@@ -136,16 +137,17 @@ public class Controller {
 
     public Boolean loadCommentToDB(Comment comment) throws SQLException {
         try {
-            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,?,?,?,?,?,SYSDATE)");
+            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,?,?,?,?,?,?,SYSDATE)");
             pstmt.setInt(1, comment.getIdTransformed());
             pstmt.setString(2, comment.getUser());
             pstmt.setString(3, comment.getCommentTitle());
             pstmt.setString(4, comment.getCommentContent());
             pstmt.setString(5, comment.getFilmRateTransformed());
             pstmt.setString(6, comment.getCreationDate());
-            pstmt.setString(7, comment.getTitle());
-            pstmt.setInt(8, comment.getFilmYearTransformed());
-            pstmt.setString(9, comment.getFilmTime());
+            pstmt.setString(7, comment.getCommentRate());
+            pstmt.setString(8, comment.getTitle());
+            pstmt.setInt(9, comment.getFilmYearTransformed());
+            pstmt.setString(10, comment.getFilmTime());
             pstmt.execute();
             pstmt.close();
             return true;

@@ -27,10 +27,13 @@ public class Comment {
     private Integer filmYearTransformed;
     private String filmTime;
     private String filmTimeTransformed;
+    private String commentRate;
 
     public String getUser() {
         return user;
     }
+
+    public String getCommentRate() { return commentRate; }
 
     public String getFilmTimeTransformed() {
         return filmTimeTransformed;
@@ -131,6 +134,8 @@ public class Comment {
     public void setFilmTimeTransformed(String filmTitleTransformed) {
         this.filmTimeTransformed = filmTitleTransformed;
     }
+
+    public void setCommentRate(String commentRate) { this.commentRate = commentRate; }
 
     @Override
     public String toString() {
