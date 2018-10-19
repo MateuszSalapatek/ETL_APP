@@ -31,10 +31,13 @@ public class Comment {
     private String commentAnswersCount;
     private String commentAnswersCountTransformed;
     private String commentAnswersLastUser;
+    public String commentAnswersLastDate;
 
     public String getUser() {
         return user;
     }
+
+    public String getCommentAnswersLastDate() { return commentAnswersLastDate; }
 
     public String getCommentAnswersLastUser() { return commentAnswersLastUser; }
 
@@ -151,6 +154,8 @@ public class Comment {
     public void setCommentAnswersCountTransformed(String commentAnswersCountTransformed) { this.commentAnswersCountTransformed = commentAnswersCountTransformed; }
 
     public void setCommentAnswersLastUser(String commentAnswersLastUser) { this.commentAnswersLastUser = commentAnswersLastUser; }
+
+    public void setCommentAnswersLastDate(String commentAnswersLastDate) { this.commentAnswersLastDate = commentAnswersLastDate; }
 
     @Override
     public String toString() {
