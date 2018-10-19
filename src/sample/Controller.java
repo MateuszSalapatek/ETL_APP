@@ -112,7 +112,7 @@ public class Controller {
                     commentObject.setFilmYear(pageContent.select(".halfSize").html());
                     commentObject.setFilmTime(pageContent.select(".filmTime").html().substring(0, 15));
                     commentObject.setCommentRate(filmCategory.select(".plusCount").html());
-                    commentObject.setCommentAnswersCount(filmCategory.select(".fonti-comment").html());
+                    commentObject.setCommentAnswersCount(filmCategory.getElementsByClass("topicAnswers").text());
 
                     if (commentObject.getCommentContent().equals("")) {
                         commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
@@ -146,7 +146,7 @@ public class Controller {
             pstmt.setString(5, comment.getFilmRateTransformed());
             pstmt.setString(6, comment.getCreationDate());
             pstmt.setString(7, comment.getCommentRate());
-            pstmt.setInt(8, comment.getCommentAnswersCountTransformed());
+            pstmt.setString(8, comment.getCommentAnswersCountTransformed());
             pstmt.setString(9, comment.getTitle());
             pstmt.setInt(10, comment.getFilmYearTransformed());
             pstmt.setString(11, comment.getFilmTime());
@@ -175,7 +175,7 @@ public class Controller {
             commentList.get(i).setIdTransformed(Integer.parseInt(commentList.get(i).getId().replaceAll("[^0-9]", ""))); //to delete chars
             commentList.get(i).setFilmRateTransformed(commentList.get(i).getFilmRate().replaceAll("[^0-9]", ""));
             commentList.get(i).setFilmYearTransformed(Integer.parseInt(commentList.get(i).getFilmYear().replaceAll("[^0-9]", "")));
-            commentList.get(i).setCommentAnswersCountTransformed(Integer.parseInt(commentList.get(i).getCommentAnswersCount().replaceAll("[^0-9]", "")));
+            commentList.get(i).setCommentAnswersCountTransformed(commentList.get(i).getCommentAnswersCount().replaceAll("[^0-9]", ""));
 
         }
 
