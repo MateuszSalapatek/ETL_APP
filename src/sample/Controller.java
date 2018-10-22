@@ -49,8 +49,7 @@ public class Controller {
     //TODO poprawić datę = 0100, 0200
     //TODO jak zrobić progress bar??
     //TODO bug CSV - polskie znaki
-    //TODO bug CSV - brak FILM YEAR i FILM TIME
-
+    //TODO bug CSV - niepełne dane
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
     private ArrayList<Comment> extractedCommentsList;
@@ -444,8 +443,8 @@ public class Controller {
 
         for ( int i = 0; i < com.getViewComment().size(); i++ ){
             csvPrinter.printRecord(com.getViewComment().get(i).getIdTransformed(), com.getViewComment().get(i).getUser(), com.getViewComment().get(i).getCommentTitle(),
-                    com.getViewComment().get(i).getCommentContent(), com.getViewComment().get(i).getFilmRate(), com.getViewComment().get(i).getCreationDate(),
-                    com.getViewComment().get(i).getTitle(), com.getViewComment().get(i).getFilmYear(), com.getViewComment().get(i).getFilmTime(),
+                    com.getViewComment().get(i).getCommentContent(), com.getViewComment().get(i).getFilmRateTransformed(), com.getViewComment().get(i).getCreationDate(),
+                    com.getViewComment().get(i).getTitle(), com.getViewComment().get(i).getFilmYearTransformed(), com.getViewComment().get(i).getFilmTimeTransformed(),
                     com.getViewComment().get(i).getCommentRate(), com.getViewComment().get(i).getCommentAnswersCountTransformed(), com.getViewComment().get(i).getCommentAnswersLastUser(),
                     com.getViewComment().get(i).getCommentAnswersLastDate());
         }
