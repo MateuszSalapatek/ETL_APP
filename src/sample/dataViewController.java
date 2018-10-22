@@ -13,7 +13,8 @@ public class dataViewController {
     private TableView tvDataView;
 
     @FXML
-    private TableColumn tcId, tcAuthor, tcCommentTittle, tcFilmRate, tcCreationDate, tcFilmTittle, tcFilmYear, tcFilmTime, tcCommentContent;
+    private TableColumn tcId, tcAuthor, tcCommentTittle, tcFilmRate, tcCreationDate, tcFilmTittle, tcFilmYear, tcFilmTime, tcCommentContent, tcCommentRate,
+            tcCommentAnswersCount, tcCommentAnswerUser, tcCommentsAnswerDate;
 
 
     public void showDataView() throws SQLException {
@@ -27,6 +28,10 @@ public class dataViewController {
         tcFilmTittle.setCellValueFactory(new PropertyValueFactory<Comment, String>("title"));
         tcFilmYear.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("filmYearTransformed"));
         tcFilmTime.setCellValueFactory(new PropertyValueFactory<Comment, String>("filmTimeTransformed"));
+        tcCommentRate.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentRate"));
+        tcCommentAnswersCount.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentAnswersCountTransformed"));
+        tcCommentAnswerUser.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("commentAnswersLastUser"));
+        tcCommentsAnswerDate.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentAnswersLastDate"));
 
 
         Comment comment = new Comment();

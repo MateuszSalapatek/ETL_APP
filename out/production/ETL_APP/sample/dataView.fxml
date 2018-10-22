@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1407.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.dataViewController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1970.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.dataViewController">
 
    <children>
       <TableView fx:id="tvDataView" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
@@ -20,6 +20,10 @@
             <TableColumn fx:id="tcFilmTittle" prefWidth="188.0" text="FILM TITTLE" />
             <TableColumn fx:id="tcFilmYear" prefWidth="165.0" text="FILM YEAR" />
             <TableColumn fx:id="tcFilmTime" prefWidth="141.0" text="FILM TIME" />
+            <TableColumn fx:id="tcCommentRate" prefWidth="141.0" text="COMMENT RATE" />
+            <TableColumn fx:id="tcCommentAnswersCount" prefWidth="141.0" text="COMMENT ANSWERS" />
+            <TableColumn fx:id="tcCommentAnswerUser" prefWidth="141.0" text="COMMENT ANSWERS LAST USER" />
+            <TableColumn fx:id="tcCommentsAnswerDate" prefWidth="141.0" text="COMMENT ANSWERS LAST DATE" />
          </columns>
       </TableView>
    </children>

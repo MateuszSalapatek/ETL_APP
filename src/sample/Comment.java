@@ -174,7 +174,11 @@ public class Comment {
                                             "       CREATIONDATE,\n" +
                                             "       FILMTITTLE,\n" +
                                             "       FILMYEAR,\n" +
-                                            "       FILMTIME FROM COMMENTS");
+                                            "       FILMTIME," +
+                                            "       COMMENTRATE,\n" +
+                                            "       COMMENTANSWERSCOUNT,\n" +
+                                            "       COMMENTANSWERSLASTUSER,\n" +
+                                            "       COMMENTANSWERSLASTDATE FROM COMMENTS");
             while (rs.next()) {
                 Comment com = new Comment();
                 com.setIdTransformed(rs.getInt(1));
@@ -186,6 +190,10 @@ public class Comment {
                 com.setTitle(rs.getString(7));
                 com.setFilmYearTransformed(rs.getInt(8));
                 com.setFilmTimeTransformed(rs.getString(9));
+                com.setCommentRate(rs.getString(10));
+                com.setCommentAnswersCountTransformed(rs.getString(11));
+                com.setCommentAnswersLastUser((rs.getString(12)));
+                com.setCommentAnswersLastDate(rs.getString(13));
                 commentViewList.add(com);
             }
         }
