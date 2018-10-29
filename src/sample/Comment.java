@@ -214,4 +214,60 @@ public class Comment {
         }
         return commentViewList;
     }
+
+    public ObservableList<Comment> getViewCommentWithConditions(String author) throws SQLException {
+        ObservableList<Comment> commentViewList = FXCollections.observableArrayList();
+        stat = conn.createStatement();
+        try {
+            ResultSet rs = stat.executeQuery("SELECT \n" +
+                                            "    ID,\n" +
+                                            "    AUTHOR,\n" +
+                                            "    COMMENTTITLE,\n" +
+                                            "    COMMENTCONTENT,\n" +
+                                            "    FILMRATE,\n" +
+                                            "    CREATIONDATE,\n" +
+                                            "    FILMTITTLE,\n" +
+                                            "    FILMYEAR,\n" +
+                                            "    FILMTIME,\n" +
+                                            "    COMMENTRATE,\n" +
+                                            "    COMMENTANSWERSCOUNT,\n" +
+                                            "    COMMENTANSWERSLASTUSER,\n" +
+                                            "    COMMENTANSWERSLASTDATE \n" +
+                                            "FROM COMMENTS\n" +
+                                            "WHERE UPPER(AUTHOR) LIKE '"+author+"%'");
+            while (rs.next()) {
+                Comment com = new Comment();
+                com.setIdTransformed(rs.getInt(1));
+                com.setUser(rs.getString(2));
+                com.setCommentTitle(rs.getString(3));
+                com.setCommentContent(rs.getString(4));
+                com.setFilmRateTransformed(rs.getString(5));
+                com.setCreationDate(rs.getString(6));
+                com.setTitle(rs.getString(7));
+                com.setFilmYearTransformed(rs.getInt(8));
+                com.setFilmTimeTransformed(rs.getString(9));
+                com.setCommentRate(rs.getString(10));
+                com.setCommentAnswersCountTransformed(rs.getString(11));
+                com.setCommentAnswersLastUser((rs.getString(12)));
+                com.setCommentAnswersLastDate(rs.getString(13));
+                commentViewList.add(com);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        } finally{
+            try{
+                if(stat!=null)
+                    stat.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+        return commentViewList;
+    }
 }

@@ -40,10 +40,8 @@ import static sample.OracleConn.*;
 public class Controller {
 
     //TODO przeszukiwanie listy filmów
-    //TODO aktualizacja danych ....filmy czy all?
     //TODO wyświetlanie danych
     //TODO export
-    //TODO extract na - ilośc odpowiedzi na komentarz, kto ostatni odpowiedział, kiedy, liczba plusów i minusów pod komentarzem
     //TODO poprawić alerty, dodać wszędzie try catche
     //TODO plik z językiem
     //TODO poprawić datę = 0100, 0200

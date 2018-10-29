@@ -8,16 +8,15 @@ import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 
 public class Main extends Application {
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-//
-//        Screen screen = Screen.getPrimary();
-//        Rectangle2D bounds = screen.getVisualBounds();
-//
+        
 //        primaryStage.setX(bounds.getMinX());
 //        primaryStage.setY(bounds.getMinY());
 //        primaryStage.setWidth(bounds.getWidth());
@@ -29,8 +28,5 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 500 , 300));
         primaryStage.show();
 
-    }
-    public static void main(String[] args) {
-        launch(args);
     }
 }
