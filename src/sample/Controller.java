@@ -102,7 +102,7 @@ public class Controller {
                     Comment commentObject = new Comment();
 
                     commentObject.setId(filmCategory.id());  //id
-                    commentObject.setCreationDate(filmCategory.select(".topicInfo .cap").html()); //date
+                    commentObject.setCreationDate(filmCategory.select(".topicInfo .cap").attr("title")); //date
                     commentObject.setUser(filmCategory.getElementsByClass("userNameLink").html()); //user
                     commentObject.setCommentContent(filmCategory.getElementsByClass("text").html()); //comment
                     commentObject.setTitle(pageContent.select(".hdr h1 a").html()); //film tittle
