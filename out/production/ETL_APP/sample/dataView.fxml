@@ -58,12 +58,12 @@
                   <Insets />
                </opaqueInsets>
             </TextField>
-            <TextField layoutX="10.0" layoutY="14.0" promptText="Comment tittle" GridPane.rowIndex="1">
+            <TextField fx:id="tfCommentTittle" layoutX="10.0" layoutY="14.0" promptText="Comment tittle" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField layoutX="10.0" layoutY="47.0" promptText="Comment" GridPane.rowIndex="2">
+            <TextField fx:id="tfCommentContent" layoutX="10.0" layoutY="47.0" promptText="Comment" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>

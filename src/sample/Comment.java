@@ -215,26 +215,29 @@ public class Comment {
         return commentViewList;
     }
 
-    public ObservableList<Comment> getViewCommentWithConditions(String author) throws SQLException {
+    public ObservableList<Comment> getViewCommentWithConditions(String author, String commentTittle, String commentContent) throws SQLException {
         ObservableList<Comment> commentViewList = FXCollections.observableArrayList();
         stat = conn.createStatement();
         try {
-            ResultSet rs = stat.executeQuery("SELECT \n" +
-                                            "    ID,\n" +
-                                            "    AUTHOR,\n" +
-                                            "    COMMENTTITLE,\n" +
-                                            "    COMMENTCONTENT,\n" +
-                                            "    FILMRATE,\n" +
-                                            "    CREATIONDATE,\n" +
-                                            "    FILMTITTLE,\n" +
-                                            "    FILMYEAR,\n" +
-                                            "    FILMTIME,\n" +
-                                            "    COMMENTRATE,\n" +
-                                            "    COMMENTANSWERSCOUNT,\n" +
-                                            "    COMMENTANSWERSLASTUSER,\n" +
-                                            "    COMMENTANSWERSLASTDATE \n" +
-                                            "FROM COMMENTS\n" +
-                                            "WHERE UPPER(AUTHOR) LIKE '"+author+"%'");
+            ResultSet rs = stat.executeQuery("SELECT\n" +
+                                            "    id,\n" +
+                                            "    author,\n" +
+                                            "    commenttitle,\n" +
+                                            "    commentcontent,\n" +
+                                            "    filmrate,\n" +
+                                            "    creationdate,\n" +
+                                            "    filmtittle,\n" +
+                                            "    filmyear,\n" +
+                                            "    filmtime,\n" +
+                                            "    commentrate,\n" +
+                                            "    commentanswerscount,\n" +
+                                            "    commentanswerslastuser,\n" +
+                                            "    commentanswerslastdate\n" +
+                                            "FROM comments\n" +
+                                            "WHERE upper(author) LIKE '"+author+"%'\n" +
+                                            "AND upper(COMMENTTITLE) LIKE '"+commentTittle+"%'\n" +
+                                            "AND upper(COMMENTCONTENT) LIKE '"+commentContent+"%'"
+            );
             while (rs.next()) {
                 Comment com = new Comment();
                 com.setIdTransformed(rs.getInt(1));

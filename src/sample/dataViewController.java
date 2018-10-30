@@ -23,7 +23,7 @@ public class dataViewController {
             tcCommentAnswersCount, tcCommentAnswerUser, tcCommentsAnswerDate;
 
     @FXML
-    private TextField tfAuthor;
+    private TextField tfAuthor, tfCommentTittle, tfCommentContent;
 
 
     public void showDataView() throws SQLException {
@@ -44,43 +44,19 @@ public class dataViewController {
 
 
         Comment comment = new Comment();
-        tvDataView.setItems(comment.getViewComment());
+        tvDataView.setItems(comment.getViewCommentWithConditions(tfAuthor.getText().toUpperCase(), tfCommentTittle.getText().toUpperCase(),
+                tfCommentContent.getText().toUpperCase()));
 
-
-        tfAuthor.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
-            @Override
-            public void handle(KeyEvent event) {
-
-                String lAuthor = tfAuthor.getText().toUpperCase()+event.getText().toUpperCase();
-                if (event.getCode().equals(KeyCode.BACK_SPACE)  && tfAuthor.getText().length()>0) {
-                    lAuthor = lAuthor.substring(0,lAuthor.length()-1);
-                }
-
-                tcId.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("idTransformed"));
-                tcAuthor.setCellValueFactory(new PropertyValueFactory<Comment, String>("user"));
-                tcCommentTittle.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentTitle"));
-                tcCommentContent.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentContent"));
-                tcFilmRate.setCellValueFactory(new PropertyValueFactory<Comment, String>("filmRateTransformed"));
-                tcCreationDate.setCellValueFactory(new PropertyValueFactory<Comment, String>("creationDate"));
-                tcFilmTittle.setCellValueFactory(new PropertyValueFactory<Comment, String>("title"));
-                tcFilmYear.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("filmYearTransformed"));
-                tcFilmTime.setCellValueFactory(new PropertyValueFactory<Comment, String>("filmTimeTransformed"));
-                tcCommentRate.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentRate"));
-                tcCommentAnswersCount.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentAnswersCountTransformed"));
-                tcCommentAnswerUser.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("commentAnswersLastUser"));
-                tcCommentsAnswerDate.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentAnswersLastDate"));
-                try {
-                    tvDataView.setItems(comment.getViewCommentWithConditions(lAuthor));
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Nieoczekiwany błąd");
-                    alert.setHeaderText("Wystąpił nieoczekiwany błąd. Prosze o kontakt z administratorem");
-                    alert.setContentText(e.getMessage());
-                    alert.showAndWait();
-                }
+        tfAuthor.setOnKeyReleased(event -> {
+            try {
+                showDataView();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Unexpected error");
+                alert.setHeaderText("Unexpected error - contact with administrator");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
             }
         });
     }
