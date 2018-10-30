@@ -237,18 +237,18 @@ public class Comment {
                                             "    commentanswerslastuser,\n" +
                                             "    commentanswerslastdate\n" +
                                             "FROM comments\n" +
-                                            "WHERE (upper(author) IS NULL OR upper(author) LIKE '"+author+"%')\n" +
-                                            "AND (upper(COMMENTTITLE) IS NULL OR upper(COMMENTTITLE) LIKE '"+commentTittle+"%')\n" +
-                                            "AND (upper(COMMENTCONTENT) IS NULL OR upper(COMMENTCONTENT) LIKE '"+commentContent+"%')" +
-                                            "AND (upper(FILMRATE) IS NULL OR upper(FILMRATE) LIKE '"+filmRate+"%')\n" +
-                                            "AND (upper(CREATIONDATE) IS NULL OR upper(CREATIONDATE) LIKE '"+creationDate+"%')\n" +
-                                            "AND (upper(FILMTITTLE) IS NULL OR upper(FILMTITTLE) LIKE '"+filmTittle+"%')\n" +
-                                            "AND (upper(FILMYEAR) IS NULL OR upper(FILMYEAR) LIKE '"+filmYear+"%')\n" +
-                                            "AND (upper(FILMTIME) IS NULL OR upper(FILMTIME) LIKE '"+filmTime+"%')\n" +
-                                            "AND (upper(COMMENTRATE) IS NULL OR upper(COMMENTRATE) LIKE '"+commentRate+"%')\n" +
-                                            "AND (upper(COMMENTANSWERSCOUNT) IS NULL OR upper(COMMENTANSWERSCOUNT) LIKE '"+commentAnswersCount+"%')\n" +
-                                            "AND (UPPER(COMMENTANSWERSLASTUSER) IS NULL OR UPPER(COMMENTANSWERSLASTUSER) LIKE '"+commentAnswersLasUser+"%')" +
-                                            "AND (UPPER(COMMENTANSWERSLASTDATE) IS NULL OR UPPER(COMMENTANSWERSLASTDATE) LIKE '"+commentAnswersLastDate+"%')"
+                                            "WHERE upper(nvl(author,'x0x0x')) LIKE '"+author+"%'\n" +
+                                            "AND upper(nvl(COMMENTTITLE,'x0x0x')) LIKE '"+commentTittle+"%'\n" +
+                                            "AND upper(nvl(COMMENTCONTENT,'x0x0x')) LIKE '"+commentContent+"%'" +
+                                            "AND upper(nvl(FILMRATE,'x0x0x'))  LIKE '"+filmRate+"%'\n" +
+                                            "AND upper(nvl(CREATIONDATE,'x0x0x'))  LIKE '"+creationDate+"%'\n" +
+                                            "AND upper(nvl(FILMTITTLE,'x0x0x'))  LIKE '"+filmTittle+"%'\n" +
+                                            "AND upper(nvl(FILMYEAR,'00000')) LIKE '"+filmYear+"%'\n" +
+                                            "AND upper(nvl(FILMTIME,'x0x0x'))  LIKE '"+filmTime+"%'\n" +
+                                            "AND upper(nvl(COMMENTRATE,'x0x0x')) LIKE '"+commentRate+"%'\n" +
+                                            "AND upper(nvl(COMMENTANSWERSCOUNT,'x0x0x'))  LIKE '"+commentAnswersCount+"%'\n" +
+                                            "AND UPPER(nvl(COMMENTANSWERSLASTUSER,'x0x0x'))  LIKE '"+commentAnswersLasUser+"%'\n" +
+                                            "AND UPPER(nvl(COMMENTANSWERSLASTDATE,'x0x0x'))  LIKE '"+commentAnswersLastDate+"%'"
             );
             while (rs.next()) {
                 Comment com = new Comment();
