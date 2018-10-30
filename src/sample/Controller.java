@@ -48,6 +48,7 @@ public class Controller {
     //TODO jak zrobić progress bar??
     //TODO bug CSV - polskie znaki
     //TODO bug CSV - niepełne dane
+    //TODO sprawdzić poprawnośc angielskeigo
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
     private ArrayList<Comment> extractedCommentsList;

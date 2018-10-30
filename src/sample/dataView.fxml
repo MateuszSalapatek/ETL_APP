@@ -68,6 +68,51 @@
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
+            <TextField fx:id="tfFilmRate" promptText="Film Rate" GridPane.columnIndex="1">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField fx:id="tfCreationDate" promptText="Creation Date" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField fx:id="tfFilmTittle" promptText="Film Tittle" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField fx:id="tfFilmYear" promptText="Film Year" GridPane.columnIndex="2">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField fx:id="tfFilmTime" promptText="Film Time" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField fx:id="tfCommentRate" promptText="Comment Rate" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField fx:id="tfCommentAnswerCount" promptText="Comment Answer Count" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField fx:id="tfCommentAnswerLastUser" promptText="Comment Answer Last User" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField fx:id="tfCommentAnswerLastDate" promptText="Comment Answer Last Date" GridPane.columnIndex="3" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </TextField>
          </children>
       </GridPane>
    </children>

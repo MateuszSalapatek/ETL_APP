@@ -23,7 +23,8 @@ public class dataViewController {
             tcCommentAnswersCount, tcCommentAnswerUser, tcCommentsAnswerDate;
 
     @FXML
-    private TextField tfAuthor, tfCommentTittle, tfCommentContent;
+    private TextField tfAuthor, tfCommentTittle, tfCommentContent, tfFilmRate, tfCreationDate, tfFilmTittle, tfFilmYear, tfFilmTime, tfCommentRate,
+            tfCommentAnswerCount, tfCommentAnswerLastUser, tfCommentAnswerLastDate;
 
 
     public void showDataView() throws SQLException {
@@ -45,7 +46,10 @@ public class dataViewController {
 
         Comment comment = new Comment();
         tvDataView.setItems(comment.getViewCommentWithConditions(tfAuthor.getText().toUpperCase(), tfCommentTittle.getText().toUpperCase(),
-                tfCommentContent.getText().toUpperCase()));
+                tfCommentContent.getText().toUpperCase(), tfFilmRate.getText().toUpperCase(), tfCreationDate.getText().toUpperCase(),
+                tfFilmTittle.getText().toUpperCase(), tfFilmYear.getText().toUpperCase(), tfFilmTime.getText().toUpperCase(),
+                tfCommentRate.getText().toUpperCase(), tfCommentAnswerCount.getText().toUpperCase(),
+                tfCommentAnswerLastUser.getText().toUpperCase(), tfCommentAnswerLastDate.getText().toUpperCase()) );
 
         tfAuthor.setOnKeyReleased(event -> {
             try {
