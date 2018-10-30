@@ -50,7 +50,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="tfAuthor" promptText="Author">
+            <TextField fx:id="tfAuthor" onKeyReleased="#showDataView" promptText="Author">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
@@ -58,57 +58,57 @@
                   <Insets />
                </opaqueInsets>
             </TextField>
-            <TextField fx:id="tfCommentTittle" layoutX="10.0" layoutY="14.0" promptText="Comment tittle" GridPane.rowIndex="1">
+            <TextField fx:id="tfCommentTittle" layoutX="10.0" layoutY="14.0" onKeyReleased="#showDataView" promptText="Comment tittle" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfCommentContent" layoutX="10.0" layoutY="47.0" promptText="Comment" GridPane.rowIndex="2">
+            <TextField fx:id="tfCommentContent" layoutX="10.0" layoutY="47.0" onKeyReleased="#showDataView" promptText="Comment" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfFilmRate" promptText="Film Rate" GridPane.columnIndex="1">
+            <TextField fx:id="tfFilmRate" onKeyReleased="#showDataView" promptText="Film Rate" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfCreationDate" promptText="Creation Date" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="tfCreationDate" onKeyReleased="#showDataView" promptText="Creation Date" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfFilmTittle" promptText="Film Tittle" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="tfFilmTittle" onKeyReleased="#showDataView" promptText="Film Tittle" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfFilmYear" promptText="Film Year" GridPane.columnIndex="2">
+            <TextField fx:id="tfFilmYear" onKeyReleased="#showDataView" promptText="Film Year" GridPane.columnIndex="2">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfFilmTime" promptText="Film Time" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <TextField fx:id="tfFilmTime" onKeyReleased="#showDataView" promptText="Film Time" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfCommentRate" promptText="Comment Rate" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <TextField fx:id="tfCommentRate" onKeyReleased="#showDataView" promptText="Comment Rate" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfCommentAnswerCount" promptText="Comment Answer Count" GridPane.columnIndex="3">
+            <TextField fx:id="tfCommentAnswerCount" onKeyReleased="#showDataView" promptText="Comment Answer Count" GridPane.columnIndex="3">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfCommentAnswerLastUser" promptText="Comment Answer Last User" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <TextField fx:id="tfCommentAnswerLastUser" onKeyReleased="#showDataView" promptText="Comment Answer Last User" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfCommentAnswerLastDate" promptText="Comment Answer Last Date" GridPane.columnIndex="3" GridPane.rowIndex="2">
+            <TextField fx:id="tfCommentAnswerLastDate" onKeyReleased="#showDataView" promptText="Comment Answer Last Date" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="15.0" right="15.0" />
                </GridPane.margin>

@@ -27,6 +27,7 @@ public class dataViewController {
             tfCommentAnswerCount, tfCommentAnswerLastUser, tfCommentAnswerLastDate;
 
 
+    //this method is called when the table is opening and when onKeyReleased is calling for textfields filter
     public void showDataView() throws SQLException {
 
         tcId.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("idTransformed"));
@@ -46,22 +47,9 @@ public class dataViewController {
 
         Comment comment = new Comment();
         tvDataView.setItems(comment.getViewCommentWithConditions(tfAuthor.getText().toUpperCase(), tfCommentTittle.getText().toUpperCase(),
-                tfCommentContent.getText().toUpperCase(), tfFilmRate.getText().toUpperCase(), tfCreationDate.getText().toUpperCase(),
-                tfFilmTittle.getText().toUpperCase(), tfFilmYear.getText().toUpperCase(), tfFilmTime.getText().toUpperCase(),
-                tfCommentRate.getText().toUpperCase(), tfCommentAnswerCount.getText().toUpperCase(),
-                tfCommentAnswerLastUser.getText().toUpperCase(), tfCommentAnswerLastDate.getText().toUpperCase()) );
-
-        tfAuthor.setOnKeyReleased(event -> {
-            try {
-                showDataView();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Unexpected error");
-                alert.setHeaderText("Unexpected error - contact with administrator");
-                alert.setContentText(e.getMessage());
-                alert.showAndWait();
-            }
-        });
+                            tfCommentContent.getText().toUpperCase(), tfFilmRate.getText().toUpperCase(), tfCreationDate.getText().toUpperCase(),
+                            tfFilmTittle.getText().toUpperCase(), tfFilmYear.getText().toUpperCase(), tfFilmTime.getText().toUpperCase(),
+                            tfCommentRate.getText().toUpperCase(), tfCommentAnswerCount.getText().toUpperCase(),
+                            tfCommentAnswerLastUser.getText().toUpperCase(), tfCommentAnswerLastDate.getText().toUpperCase()) );
     }
 }
