@@ -44,11 +44,11 @@ public class Controller {
     //TODO export
     //TODO poprawić alerty, dodać wszędzie try catche
     //TODO plik z językiem
-    //TODO poprawić datę = 0100, 0200
     //TODO jak zrobić progress bar??
     //TODO bug CSV - polskie znaki
     //TODO bug CSV - niepełne dane
     //TODO sprawdzić poprawnośc angielskeigo
+    //TODO dorobić licznik wierszy w tabeli
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
     private ArrayList<Comment> extractedCommentsList;
@@ -63,27 +63,7 @@ public class Controller {
     @FXML
     private void initialize() throws IOException, SQLException {
         OracleConn Oracle = new OracleConn();
-
-        ObservableList<Film> filmsList;
-        filmsList = getFilmsLOV();
-
-        cbPickFilm.getItems().setAll(filmsList);
-
-        //function to convert url to name of film
-        cbPickFilm.setConverter(new StringConverter<Film>() {
-            @Override
-            public String toString(Film uni) {
-                return uni.getTittle();
-            }
-
-            @Override
-            // not used...
-            public Film fromString(String s) {
-                return null;
-            }
-        });
-
-
+        fillFilmsComboBox(getFilmsLOV());
     }
 
     public ArrayList<Comment> getComments(String url) {
@@ -302,7 +282,6 @@ public class Controller {
         try {
             Document doc = Jsoup.connect(top500html).get();
             Elements rankingListPage = doc.getElementsByClass("item");
-
             ObservableList<Film> filmsTitles = observableArrayList();
 
             for (Element rankingList : rankingListPage) {
@@ -454,5 +433,22 @@ public class Controller {
         alert.setHeaderText("Export procedure finished successfully");
         alert.setContentText("Path for exported csv file is: " + String.valueOf(javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory())+"\\Comments.csv");
         alert.showAndWait();
+    }
+    public void fillFilmsComboBox(ObservableList<Film> films){
+        cbPickFilm.getItems().setAll(films);
+
+        //function to convert url to name of film
+        cbPickFilm.setConverter(new StringConverter<Film>() {
+            @Override
+            public String toString(Film uni) {
+                return uni.getTittle();
+            }
+
+            @Override
+            // not used...
+            public Film fromString(String s) {
+                return null;
+            }
+        });
     }
 }
