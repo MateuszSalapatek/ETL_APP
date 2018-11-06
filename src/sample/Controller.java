@@ -30,17 +30,20 @@ import java.rmi.server.ExportException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.*;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static sample.OracleConn.*;
 
 
 
-public class Controller {
+public class Controller  {
 
-    //TODO przeszukiwanie listy filmów
-    //TODO wyświetlanie danych
     //TODO export
     //TODO poprawić alerty, dodać wszędzie try catche
     //TODO plik z językiem
@@ -60,60 +63,66 @@ public class Controller {
     @FXML
     private ComboBox cbPickFilm;
 
+    public ComboBox getCbPickFilm() {
+        return cbPickFilm;
+    }
+
     @FXML
     private void initialize() throws IOException, SQLException {
         OracleConn Oracle = new OracleConn();
         fillFilmsComboBox(getFilmsLOV());
     }
 
-    public ArrayList<Comment> getComments(String url) {
+    public ArrayList<Comment> getComments(String url) throws IOException {
+
+        int pageCount = (int) Math.ceil( Integer.parseInt(Jsoup.connect(url).get().getElementsByClass("s-20").text().replaceAll("[^0-9]", ""))/30.0);
+
+        ExecutorService exec = Executors.newFixedThreadPool(pageCount);
+        ArrayList<Future<ArrayList<Comment>>> call_list=  new ArrayList<Future<ArrayList<Comment>>>();
+        for(int i =1;i<=pageCount;i++) {
+            call_list.add(exec.submit(new NewThread(url + i)));
+        }
 
         ArrayList<Comment> commentsList = new ArrayList<Comment>();
-        try {
-            int pageIterator = 1;
-            Document doc = Jsoup.connect(url + pageIterator).get();
-
-            Elements pageContent = doc.getElementsByClass("filmPage");
-
-            while (doc.getElementsByClass("topics-list").select(".filmCategory").size() > 0) {  // page iterator
-
-                Elements fbComments = doc.getElementsByClass("filmCategory"); //data dodania
-
-                for (Element filmCategory : fbComments) {
-                    Comment commentObject = new Comment();
-
-                    commentObject.setId(filmCategory.id());  //id
-                    commentObject.setCreationDate(filmCategory.select(".topicInfo .cap").attr("title")); //date
-                    commentObject.setUser(filmCategory.getElementsByClass("userNameLink").html()); //user
-                    commentObject.setCommentContent(filmCategory.getElementsByClass("text").html()); //comment
-                    commentObject.setTitle(pageContent.select(".hdr h1 a").html()); //film tittle
-                    commentObject.setCommentTitle(filmCategory.select(".s-16 a").html());
-                    commentObject.setFilmRate(filmCategory.select(".topicInfo li:nth-child(3)").html());
-                    commentObject.setFilmYear(pageContent.select(".halfSize").html());
-                    commentObject.setFilmTime(pageContent.select(".filmTime").attr("datetime"));
-                    commentObject.setCommentRate(filmCategory.select(".plusCount").html());
-                    commentObject.setCommentAnswersCount(filmCategory.getElementsByClass("topicAnswers").text());
-                    commentObject.setCommentAnswersLastUser(filmCategory.getElementsByClass("userLink").text());
-                    commentObject.setCommentAnswersLastDate(filmCategory.select("ul.inline li:nth-child(2) a:nth-child(2) span").attr("title"));
-
-                    if (commentObject.getCommentContent().equals("")) {
-                        commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
-                    }
-                    commentsList.add(commentObject);
-                }
-                pageIterator++;
-                doc = Jsoup.connect(url + pageIterator).get();
+        for(Future<ArrayList<Comment>> str:call_list){
+            try{
+                commentsList.addAll(str.get());
+            }catch(InterruptedException e){
+                System.out.println(e);
+            }catch(ExecutionException e){
+                System.out.println(e);
+            }finally {
+                exec.shutdown();
             }
-        } catch (ExportException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-            if (e.getMessage().equals("HTTP error fetching URL")) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Wrong page");
-                alert.setHeaderText("The page for following URL not found");
-                alert.showAndWait();
+        }
+        return commentsList;
+    }
+
+    public ArrayList<Comment> getCommentsFromPage (Document doc, Elements pageContent){
+        Elements fbComments = doc.getElementsByClass("filmCategory");
+        ArrayList<Comment> commentsList = new ArrayList<Comment>();
+
+        for (Element filmCategory : fbComments) {
+            Comment commentObject = new Comment();
+
+            commentObject.setId(filmCategory.id());  //id
+            commentObject.setCreationDate(filmCategory.select(".topicInfo .cap").attr("title")); //date
+            commentObject.setUser(filmCategory.getElementsByClass("userNameLink").html()); //user
+            commentObject.setCommentContent(filmCategory.getElementsByClass("text").html()); //comment
+            commentObject.setTitle(pageContent.select(".hdr h1 a").html()); //film tittle
+            commentObject.setCommentTitle(filmCategory.select(".s-16 a").html());
+            commentObject.setFilmRate(filmCategory.select(".topicInfo li:nth-child(3)").html());
+            commentObject.setFilmYear(pageContent.select(".halfSize").html());
+            commentObject.setFilmTime(pageContent.select(".filmTime").attr("datetime"));
+            commentObject.setCommentRate(filmCategory.select(".plusCount").html());
+            commentObject.setCommentAnswersCount(filmCategory.getElementsByClass("topicAnswers").text());
+            commentObject.setCommentAnswersLastUser(filmCategory.getElementsByClass("userLink").text());
+            commentObject.setCommentAnswersLastDate(filmCategory.select("ul.inline li:nth-child(2) a:nth-child(2) span").attr("title"));
+
+            if (commentObject.getCommentContent().equals("")) {
+                commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
             }
+            commentsList.add(commentObject);
         }
         return commentsList;
     }
@@ -167,7 +176,7 @@ public class Controller {
     }
 
     @FXML
-    private void clickETLButton(ActionEvent event) throws SQLException {
+    private void clickETLButton(ActionEvent event) throws SQLException, IOException {
         if (cbPickFilm.getValue() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Select film");
@@ -450,5 +459,26 @@ public class Controller {
                 return null;
             }
         });
+    }
+}
+class NewThread implements Callable {
+
+    private String  url;
+    private Elements el;
+    private Document doc;
+
+
+    NewThread(String link){
+        this.url = link;
+    }
+
+    @Override
+    public ArrayList<Comment> call() throws Exception {
+        this.doc = Jsoup.connect(url ).get();
+        this.el = Jsoup.connect(url).get().getElementsByClass("filmPage");
+        Controller con = new Controller();
+        ArrayList<Comment> threadComments = new ArrayList<>();
+        threadComments.addAll(con.getCommentsFromPage(doc,el));
+        return threadComments;
     }
 }
