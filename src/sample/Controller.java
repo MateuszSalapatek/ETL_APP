@@ -26,6 +26,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.rmi.UnexpectedException;
 import java.rmi.server.ExportException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -74,58 +75,78 @@ public class Controller  {
     }
 
     public ArrayList<Comment> getComments(String url) throws IOException {
+        try {
+            int pageCount = (int) Math.ceil(Integer.parseInt(Jsoup.connect(url).get().getElementsByClass("s-20").text().replaceAll("[^0-9]", "")) / 30.0);
 
-        int pageCount = (int) Math.ceil( Integer.parseInt(Jsoup.connect(url).get().getElementsByClass("s-20").text().replaceAll("[^0-9]", ""))/30.0);
-
-        ExecutorService exec = Executors.newFixedThreadPool(pageCount);
-        ArrayList<Future<ArrayList<Comment>>> call_list=  new ArrayList<Future<ArrayList<Comment>>>();
-        for(int i =1;i<=pageCount;i++) {
-            call_list.add(exec.submit(new NewThread(url + i)));
-        }
-
-        ArrayList<Comment> commentsList = new ArrayList<Comment>();
-        for(Future<ArrayList<Comment>> str:call_list){
-            try{
-                commentsList.addAll(str.get());
-            }catch(InterruptedException e){
-                System.out.println(e);
-            }catch(ExecutionException e){
-                System.out.println(e);
-            }finally {
-                exec.shutdown();
+            ExecutorService exec = Executors.newFixedThreadPool(pageCount);
+            ArrayList<Future<ArrayList<Comment>>> call_list = new ArrayList<Future<ArrayList<Comment>>>();
+            for (int i = 1; i <= pageCount; i++) {
+                call_list.add(exec.submit(new NewThread(url + i)));
             }
+
+            ArrayList<Comment> commentsList = new ArrayList<Comment>();
+            for (Future<ArrayList<Comment>> str : call_list) {
+                try {
+                    commentsList.addAll(str.get());
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                } catch (ExecutionException e) {
+                    System.out.println(e);
+                } finally {
+                    exec.shutdown();
+                }
+            }
+            return commentsList;
+        }catch (UnexpectedException e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            return null;
         }
-        return commentsList;
     }
 
     public ArrayList<Comment> getCommentsFromPage (Document doc, Elements pageContent){
-        Elements fbComments = doc.getElementsByClass("filmCategory");
-        ArrayList<Comment> commentsList = new ArrayList<Comment>();
+        try {
+            Elements fbComments = doc.getElementsByClass("filmCategory");
+            ArrayList<Comment> commentsList = new ArrayList<Comment>();
 
-        for (Element filmCategory : fbComments) {
-            Comment commentObject = new Comment();
+            for (Element filmCategory : fbComments) {
+                Comment commentObject = new Comment();
 
-            commentObject.setId(filmCategory.id());  //id
-            commentObject.setCreationDate(filmCategory.select(".topicInfo .cap").attr("title")); //date
-            commentObject.setUser(filmCategory.getElementsByClass("userNameLink").html()); //user
-            commentObject.setCommentContent(filmCategory.getElementsByClass("text").html()); //comment
-            commentObject.setTitle(pageContent.select(".hdr h1 a").html()); //film tittle
-            commentObject.setCommentTitle(filmCategory.select(".s-16 a").html());
-            commentObject.setFilmRate(filmCategory.select(".topicInfo li:nth-child(3)").html());
-            commentObject.setFilmYear(pageContent.select(".halfSize").html());
-            commentObject.setFilmTime(pageContent.select(".filmTime").attr("datetime"));
-            commentObject.setCommentRate(filmCategory.select(".plusCount").html());
-            commentObject.setCommentAnswersCount(filmCategory.getElementsByClass("topicAnswers").text());
-            commentObject.setCommentAnswersLastUser(filmCategory.getElementsByClass("userLink").text());
-            commentObject.setCommentAnswersLastDate(filmCategory.select("ul.inline li:nth-child(2) a:nth-child(2) span").attr("title"));
+                commentObject.setId(filmCategory.id());  //id
+                commentObject.setCreationDate(filmCategory.select(".topicInfo .cap").attr("title")); //date
+                commentObject.setUser(filmCategory.getElementsByClass("userNameLink").html()); //user
+                commentObject.setCommentContent(filmCategory.getElementsByClass("text").html()); //comment
+                commentObject.setTitle(pageContent.select(".hdr h1 a").html()); //film tittle
+                commentObject.setCommentTitle(filmCategory.select(".s-16 a").html());
+                commentObject.setFilmRate(filmCategory.select(".topicInfo li:nth-child(3)").html());
+                commentObject.setFilmYear(pageContent.select(".halfSize").html());
+                commentObject.setFilmTime(pageContent.select(".filmTime").attr("datetime"));
+                commentObject.setCommentRate(filmCategory.select(".plusCount").html());
+                commentObject.setCommentAnswersCount(filmCategory.getElementsByClass("topicAnswers").text());
+                commentObject.setCommentAnswersLastUser(filmCategory.getElementsByClass("userLink").text());
+                commentObject.setCommentAnswersLastDate(filmCategory.select("ul.inline li:nth-child(2) a:nth-child(2) span").attr("title"));
 
-            if (commentObject.getCommentContent().equals("")) {
-                commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
+                if (commentObject.getCommentContent().equals("")) {
+                    commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
+                }
+                commentsList.add(commentObject);
             }
-            commentsList.add(commentObject);
+            return commentsList;
+        }catch (Error e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+            return null;
         }
-        return commentsList;
     }
+
 
     public Boolean loadCommentToDB(Comment comment) throws SQLException {
         try {
@@ -400,18 +421,32 @@ public class Controller  {
             ObservableList<Film> filmsList;
             filmsList = getFilmsLOV();
 
-            for (int i = 0; i < filmsList.size(); i++) {
-                ArrayList<Comment> extractedList = Controller.this.getComments(filmsList.get(i).getUrl());
-                ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
-                Integer deleteCounter = 0;
-                for (int j = 0; j < tranformedList.size(); j++) {
-                    Boolean load = loadCommentToDB(tranformedList.get(j));
-                    if (!load) {
-                        deleteCounter++;
-                    }
-                }
-                System.out.println("Linia: " + i + ", pobrano " + extractedList.size() + "komentarzy");
+//            ExecutorService exec = Executors.newFixedThreadPool(filmsList.size());
+            ExecutorService exec = Executors.newFixedThreadPool(100);
+            ArrayList<Future<ArrayList<Comment>>> call_list=  new ArrayList<Future<ArrayList<Comment>>>();
+            for(int i =0;i<100;i++) {
+                call_list.add(exec.submit(new NewThreadTop500(filmsList.get(i).getUrl(), i) ));
             }
+            ArrayList<Comment> commentsList = new ArrayList<Comment>();
+            for(Future<ArrayList<Comment>> str:call_list){
+                try{
+                    commentsList.addAll(str.get());
+                }catch(InterruptedException e){
+                    System.out.println(e);
+                }catch(ExecutionException e){
+                    System.out.println(e);
+                }finally {
+                    exec.shutdown();
+                }
+            }
+            System.out.println("load");
+            for (int j = 0; j < commentsList.size(); j++) {
+                loadCommentToDB(commentsList.get(j));
+            }
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Load procedure");
+            alert.setHeaderText("Load procedure finished successfully");
+            alert.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -474,11 +509,38 @@ class NewThread implements Callable {
 
     @Override
     public ArrayList<Comment> call() throws Exception {
+        System.out.println("parsowanie stron  " + url);
         this.doc = Jsoup.connect(url ).get();
         this.el = Jsoup.connect(url).get().getElementsByClass("filmPage");
         Controller con = new Controller();
         ArrayList<Comment> threadComments = new ArrayList<>();
         threadComments.addAll(con.getCommentsFromPage(doc,el));
+        Thread.yield();
         return threadComments;
     }
 }
+
+class NewThreadTop500 implements Callable {
+
+    private String  url;
+    private Integer i;
+
+    NewThreadTop500(String link, Integer i){
+        this.url = link;
+        this.i = i;
+    }
+
+    @Override
+    public ArrayList<Comment> call() throws Exception {
+        System.out.println(i +" weszlo " + url);
+        Controller con = new Controller();
+
+        ArrayList<Comment> extractedList = con.getComments(url);
+        ArrayList<Comment> tranformedList = con.transformComments(extractedList);
+        Integer deleteCounter = 0;
+        Thread.yield();
+        return tranformedList;
+    }
+}
+
+
