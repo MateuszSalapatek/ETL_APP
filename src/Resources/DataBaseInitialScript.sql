@@ -1,5 +1,3 @@
-
-
 CREATE TABLE COMMENTS (
                         id NUMBER  PRIMARY KEY  ,
                         author VARCHAR2(4000),
@@ -14,9 +12,9 @@ CREATE TABLE COMMENTS (
                         filmTittle VARCHAR2(4000),
                         filmYear NUMBER,
                         filmTime VARCHAR2(4000),
+                        commentLink VARCHAR2(4000),
                         creationDateDB DATE
-                      ); 
-                      
+                      );
                       
 
                       

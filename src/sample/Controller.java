@@ -52,6 +52,7 @@ public class Controller  {
     //TODO bug CSV - niepełne dane
     //TODO sprawdzić poprawnośc angielskeigo
     //TODO dorobić licznik wierszy w tabeli
+    //TODO czy dodać link do kolumny?
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
     private ArrayList<Comment> extractedCommentsList;
@@ -96,7 +97,7 @@ public class Controller  {
         return commentsList;
     }
 
-    public ArrayList<Comment> getCommentsFromPage (Document doc, Elements pageContent){
+    public ArrayList<Comment> getCommentsFromPage (Document doc, Elements pageContent, String commentUrl){
         Elements fbComments = doc.getElementsByClass("filmCategory");
         ArrayList<Comment> commentsList = new ArrayList<Comment>();
 
@@ -116,7 +117,7 @@ public class Controller  {
             commentObject.setCommentAnswersCount(filmCategory.getElementsByClass("topicAnswers").text());
             commentObject.setCommentAnswersLastUser(filmCategory.getElementsByClass("userLink").text());
             commentObject.setCommentAnswersLastDate(filmCategory.select("ul.inline li:nth-child(2) a:nth-child(2) span").attr("title"));
-
+            commentObject.setCommentLink(commentUrl);
             if (commentObject.getCommentContent().equals("")) {
                 commentObject.setCommentContent(filmCategory.getElementsByClass("italic").html());
             }
@@ -127,7 +128,7 @@ public class Controller  {
 
     public Boolean loadCommentToDB(Comment comment) throws SQLException {
         try {
-            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,SYSDATE)");
+            pstmt = conn.prepareStatement("INSERT INTO COMMENTS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,SYSDATE)");
             pstmt.setInt(1, comment.getIdTransformed());
             pstmt.setString(2, comment.getUser());
             pstmt.setString(3, comment.getCommentTitle());
@@ -141,6 +142,7 @@ public class Controller  {
             pstmt.setString(11, comment.getTitle());
             pstmt.setInt(12, comment.getFilmYearTransformed());
             pstmt.setString(13, comment.getFilmTimeTransformed());
+            pstmt.setString(14, comment.getCommentLink());
             pstmt.execute();
             pstmt.close();
             return true;
@@ -353,12 +355,7 @@ public class Controller  {
                 alert.setHeaderText("The database is empty");
                 alert.showAndWait();
             } else {
-                conn.setAutoCommit(false);
-                pstmt = conn.prepareStatement("DELETE FROM COMMENTS WHERE 1=1");
-                pstmt.execute();
-                pstmt.close();
-                conn.commit();
-                conn.setAutoCommit(true);
+                clearDataBase();
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Database");
@@ -395,21 +392,21 @@ public class Controller  {
 
         try {
             root = loader.load(getClass().getResource("dataView.fxml").openStream());
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+
+            dataViewController trDataView = (dataViewController) loader.getController();
+            stage.setTitle("Data View");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            trDataView.showDataView();
+        } catch (SQLException e) {
             e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Unexpected error");
             alert.setHeaderText("Unexpected error - contact with administrator");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
-        }
-        dataViewController trDataView = (dataViewController) loader.getController();
-        stage.setTitle("Data View");
-        stage.setScene(new Scene(root));
-        stage.show();
-        try {
-            trDataView.showDataView();
-        } catch (SQLException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Unexpected error");
@@ -470,6 +467,46 @@ public class Controller  {
         alert.setContentText("Path for exported csv file is: " + String.valueOf(javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory())+"\\Comments.csv");
         alert.showAndWait();
     }
+
+    @FXML
+    private void clickUpdateLoadedData(ActionEvent event) {
+        try {
+            ArrayList<String> commentsLinks = new ArrayList<>();
+            Comment comment = new Comment();
+            commentsLinks = comment.getFilmsCommentsLinks();
+            Integer commentsQty = 0;
+            if(commentsLinks.size()>0){
+                clearDataBase();
+
+                for ( int j = 0; j<commentsLinks.size(); j++ ) {
+                    ArrayList<Comment> extractedList = Controller.this.getComments(commentsLinks.get(j));
+                    ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+                    commentsQty = commentsQty + tranformedList.size();
+                    for (int i = 0; i < tranformedList.size(); i++) {
+                        loadCommentToDB(tranformedList.get(i));
+                    }
+                }
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Updating procedure");
+                alert.setHeaderText("Updating procedure finished successfully");
+                alert.setContentText("Quantity of updated comments: " + commentsQty);
+                alert.showAndWait();
+            }else{
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Database");
+                alert.setHeaderText("The database is empty");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
     public void fillFilmsComboBox(ObservableList<Film> films){
         cbPickFilm.getItems().setAll(films);
 
@@ -487,6 +524,25 @@ public class Controller  {
             }
         });
     }
+
+    public void clearDataBase() throws SQLException {
+        try {
+            conn.setAutoCommit(false);
+            pstmt = conn.prepareStatement("DELETE FROM COMMENTS WHERE 1=1");
+            pstmt.execute();
+            pstmt.close();
+            conn.commit();
+            conn.setAutoCommit(true);
+        }catch (SQLException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
 }
 class NewThread implements Callable {
 
@@ -505,7 +561,7 @@ class NewThread implements Callable {
         this.el = Jsoup.connect(url).get().getElementsByClass("filmPage");
         Controller con = new Controller();
         ArrayList<Comment> threadComments = new ArrayList<>();
-        threadComments.addAll(con.getCommentsFromPage(doc,el));
+        threadComments.addAll(con.getCommentsFromPage(doc,el,url));
         return threadComments;
     }
 }

@@ -9,6 +9,7 @@ import static sample.OracleConn.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static sample.OracleConn.stat;
 
@@ -32,6 +33,15 @@ public class Comment {
     private String commentAnswersCountTransformed;
     private String commentAnswersLastUser;
     public String commentAnswersLastDate;
+    public String commentLink;
+
+    public void setCommentLink(String commentLink) {
+        this.commentLink = commentLink;
+    }
+
+    public String getCommentLink() {
+        return commentLink;
+    }
 
     public String getUser() {
         return user;
@@ -284,5 +294,32 @@ public class Comment {
             }
         }
         return commentViewList;
+    }
+
+    public ArrayList<String> getFilmsCommentsLinks() throws SQLException {
+        stat = conn.createStatement();
+        ArrayList<String> commentsLink = new ArrayList<>();
+        try {
+            ResultSet rs = stat.executeQuery("SELECT DISTINCT SUBSTR(COMMENTLINK, 1, REGEXP_INSTR(COMMENTLINK,'page=[[:digit:]]')+4 ) FROM COMMENTS");
+            while (rs.next()) {
+                commentsLink.add(rs.getString(1));
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        } finally{
+            try{
+                if(stat!=null)
+                    stat.close();
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+        return commentsLink;
     }
 }
