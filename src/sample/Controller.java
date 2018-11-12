@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -23,6 +24,7 @@ import org.jsoup.select.Elements;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -355,13 +357,18 @@ public class Controller  {
                 alert.setHeaderText("The database is empty");
                 alert.showAndWait();
             } else {
-                clearDataBase();
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Database");
-                alert.setHeaderText("Database has been cleared");
-                alert.setContentText(count + " rows has been removed");
-                alert.showAndWait();
+                if(clearDataBase()){
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Database");
+                    alert.setHeaderText("Database has been cleared");
+                    alert.setContentText(count + " rows has been removed");
+                    alert.showAndWait();
+                }else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Unexpected error");
+                    alert.setHeaderText("Unexpected error - contact with administrator");
+                    alert.showAndWait();
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -444,28 +451,48 @@ public class Controller  {
     @FXML
     private void clickExportCSV(ActionEvent event) throws SQLException, IOException {
 
+        try {
+            Comment com = new Comment();
+            Stage currentStage = new Stage();
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Choose the export place");
+            File selectedDirectory = directoryChooser.showDialog(currentStage);
 
-        Comment com = new Comment();
-        BufferedWriter writer = Files.newBufferedWriter(Paths.get(String.valueOf(javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory())+"\\Comments.csv"));
+            if (selectedDirectory == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Folder choosing");
+                alert.setHeaderText("Foler has not been choosen");
+                alert.showAndWait();
+            } else {
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get(selectedDirectory.getAbsolutePath() + "\\Comments.csv"));
 
-        CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                .withHeader("ID", "AUTHOR", "COMMENT TITTLE", "COMMENT", "FILM RATE", "CREATION DATE", "FILM TITTLE",
-                        "FILM YEAR", "FILM TIME", "COMMENT RATE", "COMMENT ANSWER COUNT", "COMMENT ANSWER LAST USER", "COMMENT ANSWER LAST DATE"));
+                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
+                        .withHeader("ID", "AUTHOR", "COMMENT TITTLE", "COMMENT", "FILM RATE", "CREATION DATE", "FILM TITTLE",
+                                "FILM YEAR", "FILM TIME", "COMMENT RATE", "COMMENT ANSWER COUNT", "COMMENT ANSWER LAST USER", "COMMENT ANSWER LAST DATE"));
 
-        for ( int i = 0; i < com.getViewComment().size(); i++ ){
-            csvPrinter.printRecord(com.getViewComment().get(i).getIdTransformed(), com.getViewComment().get(i).getUser(), com.getViewComment().get(i).getCommentTitle(),
-                    com.getViewComment().get(i).getCommentContent(), com.getViewComment().get(i).getFilmRateTransformed(), com.getViewComment().get(i).getCreationDate(),
-                    com.getViewComment().get(i).getTitle(), com.getViewComment().get(i).getFilmYearTransformed(), com.getViewComment().get(i).getFilmTimeTransformed(),
-                    com.getViewComment().get(i).getCommentRate(), com.getViewComment().get(i).getCommentAnswersCountTransformed(), com.getViewComment().get(i).getCommentAnswersLastUser(),
-                    com.getViewComment().get(i).getCommentAnswersLastDate());
+                for (int i = 0; i < com.getViewComment().size(); i++) {
+                    csvPrinter.printRecord(com.getViewComment().get(i).getIdTransformed(), com.getViewComment().get(i).getUser(), com.getViewComment().get(i).getCommentTitle(),
+                            com.getViewComment().get(i).getCommentContent(), com.getViewComment().get(i).getFilmRateTransformed(), com.getViewComment().get(i).getCreationDate(),
+                            com.getViewComment().get(i).getTitle(), com.getViewComment().get(i).getFilmYearTransformed(), com.getViewComment().get(i).getFilmTimeTransformed(),
+                            com.getViewComment().get(i).getCommentRate(), com.getViewComment().get(i).getCommentAnswersCountTransformed(), com.getViewComment().get(i).getCommentAnswersLastUser(),
+                            com.getViewComment().get(i).getCommentAnswersLastDate());
+                }
+                csvPrinter.flush();
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Export procedure");
+                alert.setHeaderText("Export procedure finished successfully");
+                alert.setContentText("Path for exported csv file is: " + selectedDirectory.getAbsolutePath() + "\\Comments.csv");
+                alert.showAndWait();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
-        csvPrinter.flush();
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Export procedure");
-        alert.setHeaderText("Export procedure finished successfully");
-        alert.setContentText("Path for exported csv file is: " + String.valueOf(javax.swing.filechooser.FileSystemView.getFileSystemView().getHomeDirectory())+"\\Comments.csv");
-        alert.showAndWait();
     }
 
     @FXML
@@ -476,21 +503,27 @@ public class Controller  {
             commentsLinks = comment.getFilmsCommentsLinks();
             Integer commentsQty = 0;
             if(commentsLinks.size()>0){
-                clearDataBase();
-
-                for ( int j = 0; j<commentsLinks.size(); j++ ) {
-                    ArrayList<Comment> extractedList = Controller.this.getComments(commentsLinks.get(j));
-                    ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
-                    commentsQty = commentsQty + tranformedList.size();
-                    for (int i = 0; i < tranformedList.size(); i++) {
-                        loadCommentToDB(tranformedList.get(i));
+                if(clearDataBase()){
+                    for ( int j = 0; j<commentsLinks.size(); j++ ) {
+                        ArrayList<Comment> extractedList = Controller.this.getComments(commentsLinks.get(j));
+                        ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+                        commentsQty = commentsQty + tranformedList.size();
+                        for (int i = 0; i < tranformedList.size(); i++) {
+                            loadCommentToDB(tranformedList.get(i));
+                        }
                     }
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Updating procedure");
+                    alert.setHeaderText("Updating procedure finished successfully");
+                    alert.setContentText("Quantity of updated comments: " + commentsQty);
+                    alert.showAndWait();
                 }
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Updating procedure");
-                alert.setHeaderText("Updating procedure finished successfully");
-                alert.setContentText("Quantity of updated comments: " + commentsQty);
-                alert.showAndWait();
+                else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Unexpected error");
+                    alert.setHeaderText("Unexpected error - contact with administrator");
+                    alert.showAndWait();
+                }
             }else{
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Database");
@@ -525,7 +558,7 @@ public class Controller  {
         });
     }
 
-    public void clearDataBase() throws SQLException {
+    public Boolean clearDataBase() throws SQLException {
         try {
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("DELETE FROM COMMENTS WHERE 1=1");
@@ -533,6 +566,7 @@ public class Controller  {
             pstmt.close();
             conn.commit();
             conn.setAutoCommit(true);
+            return true;
         }catch (SQLException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -540,9 +574,9 @@ public class Controller  {
             alert.setHeaderText("Unexpected error - contact with administrator");
             alert.setContentText(e.getMessage());
             alert.showAndWait();
+            return false;
         }
     }
-
 }
 class NewThread implements Callable {
 
