@@ -58,17 +58,15 @@ public class Controller  {
     private ArrayList<Comment> transformedCommentsList;
 
     @FXML
-    private Button bELT, bExtract, bTransform, bLoad;
+    private Button bETL, bExtract, bTransform, bLoad, bCancelExtracted;
 
     @FXML
     private ComboBox cbPickFilm;
 
-    public ComboBox getCbPickFilm() {
-        return cbPickFilm;
-    }
-
     @FXML
     private void initialize() throws IOException, SQLException {
+        extractedCommentsList = null;
+        extractedCommentsList = null;
         OracleConn Oracle = new OracleConn();
         fillFilmsComboBox(getFilmsLOV());
     }
@@ -222,7 +220,10 @@ public class Controller  {
             }
 
             bTransform.setDisable(false);
+            bCancelExtracted.setDisable(false);
+            cbPickFilm.setDisable(true);
             bExtract.setDisable(true);
+            bETL.setDisable(true);
         }
     }
 
@@ -247,6 +248,7 @@ public class Controller  {
                 alert.showAndWait();
                 bTransform.setDisable(true);
                 bLoad.setDisable(false);
+                bCancelExtracted.setDisable(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -284,6 +286,31 @@ public class Controller  {
         bTransform.setDisable(true);
         bLoad.setDisable(true);
         bExtract.setDisable(false);
+        cbPickFilm.setDisable(false);
+        bETL.setDisable(false);
+        bCancelExtracted.setDisable(true);
+    }
+
+    @FXML
+    private void clickCancelExtracted(ActionEvent event){
+        try {
+            bCancelExtracted.setDisable(true);
+            bExtract.setDisable(false);
+            bTransform.setDisable(true);
+            bLoad.setDisable(true);
+            cbPickFilm.setDisable(false);
+            bETL.setDisable(false);
+            if(extractedCommentsList.size()>0) {
+                extractedCommentsList.clear();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     public ObservableList<Film> getFilmsLOV() throws IOException {

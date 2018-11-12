@@ -13,6 +13,7 @@
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -23,9 +24,10 @@
       <Button fx:id="bTransform" disable="true" mnemonicParsing="false" onAction="#clickTransformButton" text="Transform Data" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <Button fx:id="bLoad" disable="true" mnemonicParsing="false" onAction="#clickLoadButton" text="Load Data" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
       <Button mnemonicParsing="false" onAction="#clickClearDatabase" text="Clear Database" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-      <Button mnemonicParsing="false" onAction="#clickOpenTableView" text="Table View" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+      <Button mnemonicParsing="false" onAction="#clickOpenTableView" text="Table View" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
        <ComboBox fx:id="cbPickFilm" prefWidth="150.0" promptText="Wybierz film" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
       <Button fx:id="bETL1" layoutX="293.0" layoutY="198.0" mnemonicParsing="false" onAction="#clickETLButtonAll" text="ETL ALL" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
       <Button mnemonicParsing="false" onAction="#clickExportCSV" text="Export CSV" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <Button fx:id="bCancelExtracted" disable="true" layoutX="73.0" layoutY="148.0" mnemonicParsing="false" onAction="#clickCancelExtracted" text="Cancel Extracted" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

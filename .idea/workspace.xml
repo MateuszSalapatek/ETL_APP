@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/sample.fxml" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -112,13 +111,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="fxml" value="17" />
-          <entry key="java" value="12500" />
+          <entry key="java" value="12735" />
           <entry key="xml" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="12500" />
+          <entry key="JAVA" value="12735" />
           <entry key="XML" value="34" />
         </counts>
       </usages-collector>
@@ -126,7 +125,7 @@
         <counts>
           <entry key="android_data_binding" value="1" />
           <entry key="class" value="1" />
-          <entry key="fxml" value="5" />
+          <entry key="fxml" value="6" />
           <entry key="iml" value="1" />
           <entry key="java" value="27" />
           <entry key="sql" value="7" />
@@ -140,7 +139,7 @@
           <entry key="IDEA_MODULE" value="1" />
           <entry key="JAVA" value="27" />
           <entry key="SQL" value="7" />
-          <entry key="XML" value="7" />
+          <entry key="XML" value="8" />
         </counts>
       </usages-collector>
     </session>
@@ -203,35 +202,29 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-546">
-              <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
+            <state relative-caret-position="352">
+              <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
               <folding>
-                <element signature="e#2063#2120#0" />
-                <element signature="e#7670#9509#0" />
-                <element signature="e#9515#11023#0" />
-                <element signature="e#11029#11841#0" />
-                <element signature="e#11847#13112#0" />
-                <element signature="e#13118#14120#0" />
-                <element signature="e#14126#15256#0" />
-                <element signature="e#15262#16643#0" />
-                <element signature="e#16649#17553#0" />
-                <element signature="e#17559#19054#0" />
-                <element signature="e#19060#20658#0" />
-                <element signature="e#20665#21608#0" />
-                <element signature="e#21614#23533#0" />
-                <element signature="e#23538#24035#0" />
-                <element signature="e#24078#24079#0" expanded="true" />
-                <element signature="e#24109#24110#0" expanded="true" />
+                <element signature="e#2433#2461#0" expanded="true" />
+                <element signature="e#2636#2645#0" expanded="true" />
+                <element signature="e#3262#3271#0" expanded="true" />
+                <element signature="e#19190#19191#0" expanded="true" />
+                <element signature="e#19244#19245#0" expanded="true" />
+                <element signature="e#19341#19342#0" expanded="true" />
+                <element signature="e#19384#19385#0" expanded="true" />
+                <element signature="e#19549#19550#0" expanded="true" />
+                <element signature="e#19580#19581#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/DYSK_D/Repo2/Mobile/XX_MOBILE_LABELS/trunk/src/xxfideltronik/oracle/apps/wip/wma/mlabel/engine/MainForm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="156" column="19" lean-forward="true" selection-start-line="156" selection-start-column="19" selection-end-line="156" selection-end-column="19" />
+        <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
+          <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="476">
+              <caret line="28" column="204" selection-start-line="28" selection-start-column="204" selection-end-line="28" selection-end-column="204" />
             </state>
           </provider>
         </entry>
@@ -239,8 +232,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="714">
-              <caret line="55" column="44" selection-start-line="55" selection-start-column="44" selection-end-line="55" selection-end-column="44" />
+            <state relative-caret-position="187">
+              <caret line="15" column="49" selection-start-line="15" selection-start-column="49" selection-end-line="15" selection-end-column="49" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -276,6 +272,7 @@
       <find>wie</find>
       <find>wiel</find>
       <find>Wywołanie</find>
+      <find>transformedCommentsList</find>
     </findStrings>
   </component>
   <component name="FindManager">
@@ -296,8 +293,8 @@
         <option value="$PROJECT_DIR$/src/sample/dataViewController.java" />
         <option value="$PROJECT_DIR$/src/sample/dataView.fxml" />
         <option value="$PROJECT_DIR$/src/sample/Comment.java" />
-        <option value="$PROJECT_DIR$/src/sample/sample.fxml" />
         <option value="$PROJECT_DIR$/src/sample/Main.java" />
+        <option value="$PROJECT_DIR$/src/sample/sample.fxml" />
         <option value="$PROJECT_DIR$/src/sample/Controller.java" />
       </list>
     </option>
@@ -326,6 +323,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -349,7 +347,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -484,11 +481,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="1934" height="1047" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" weight="0.21695095" />
-      <window_info id="Structure" order="1" visible="true" weight="0.2171825" />
+      <window_info id="Structure" order="1" visible="true" weight="0.2260128" />
       <window_info id="Favorites" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="Image Layers" order="4" />
@@ -499,7 +495,7 @@
       <window_info anchor="bottom" id="Debug" order="2" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
-      <window_info anchor="bottom" id="Run" order="5" weight="0.35158816" />
+      <window_info active="true" anchor="bottom" id="Run" order="5" visible="true" weight="0.37635574" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3275488" />
       <window_info anchor="bottom" id="Application Servers" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
@@ -581,21 +577,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" column="204" selection-start-line="27" selection-start-column="204" selection-end-line="27" selection-end-column="204" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/dataView.fxml">
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
       <provider editor-type-id="text-editor">
         <state relative-caret-position="884">
           <caret line="52" column="53" selection-start-line="52" selection-start-column="40" selection-end-line="52" selection-end-column="53" />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/dataViewController.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -674,8 +662,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="55" column="44" selection-start-line="55" selection-start-column="44" selection-end-line="55" selection-end-column="44" />
+        <state relative-caret-position="187">
+          <caret line="15" column="49" selection-start-line="15" selection-start-column="49" selection-end-line="15" selection-end-column="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -693,27 +684,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="28" column="204" selection-start-line="28" selection-start-column="204" selection-end-line="28" selection-end-column="204" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-546">
-          <caret line="139" lean-forward="true" selection-start-line="139" selection-end-line="139" />
+        <state relative-caret-position="352">
+          <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
           <folding>
-            <element signature="e#2063#2120#0" />
-            <element signature="e#7670#9509#0" />
-            <element signature="e#9515#11023#0" />
-            <element signature="e#11029#11841#0" />
-            <element signature="e#11847#13112#0" />
-            <element signature="e#13118#14120#0" />
-            <element signature="e#14126#15256#0" />
-            <element signature="e#15262#16643#0" />
-            <element signature="e#16649#17553#0" />
-            <element signature="e#17559#19054#0" />
-            <element signature="e#19060#20658#0" />
-            <element signature="e#20665#21608#0" />
-            <element signature="e#21614#23533#0" />
-            <element signature="e#23538#24035#0" />
-            <element signature="e#24078#24079#0" expanded="true" />
-            <element signature="e#24109#24110#0" expanded="true" />
+            <element signature="e#2433#2461#0" expanded="true" />
+            <element signature="e#2636#2645#0" expanded="true" />
+            <element signature="e#3262#3271#0" expanded="true" />
+            <element signature="e#19190#19191#0" expanded="true" />
+            <element signature="e#19244#19245#0" expanded="true" />
+            <element signature="e#19341#19342#0" expanded="true" />
+            <element signature="e#19384#19385#0" expanded="true" />
+            <element signature="e#19549#19550#0" expanded="true" />
+            <element signature="e#19580#19581#0" expanded="true" />
           </folding>
         </state>
       </provider>
