@@ -44,8 +44,7 @@ public class Controller  {
     //TODO poprawić alerty, dodać wszędzie try catche
     //TODO plik z językiem
     //TODO jak zrobić progress bar??
-    //TODO bug CSV - polskie znaki
-    //TODO bug CSV - niepełne dane
+    //TODO bug CSV - niepełne dane, niepokolei dane - bug po uruchominiu wielowatkowości
     //TODO sprawdzić poprawnośc angielskeigo
     //TODO czy dodać link do kolumny?
     //TODO bug - na liście jest tylko 25 filmów
@@ -448,6 +447,11 @@ public class Controller  {
 
         try {
             Comment com = new Comment();
+            ObservableList<Comment> commentList;
+            commentList = com.getViewComment();
+
+            ExecutorService exec = Executors.newFixedThreadPool(commentList.size());
+
             Stage currentStage = new Stage();
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Choose the export place");
@@ -459,7 +463,7 @@ public class Controller  {
                 alert.setHeaderText("Foler has not been choosen");
                 alert.showAndWait();
             } else {
-                if(com.getViewComment().size()>0) {
+                if(commentList.size()>0) {
                     File f = new File(selectedDirectory.getAbsolutePath() + "\\Comments.csv");
                     if(f.isFile()){
                         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -472,12 +476,8 @@ public class Controller  {
                                 .withHeader("ID", "AUTHOR", "COMMENT TITTLE", "COMMENT", "FILM RATE", "CREATION DATE", "FILM TITTLE",
                                         "FILM YEAR", "FILM TIME", "COMMENT RATE", "COMMENT ANSWER COUNT", "COMMENT ANSWER LAST USER", "COMMENT ANSWER LAST DATE"));
 
-                        for (int i = 0; i < com.getViewComment().size(); i++) {
-                            csvPrinter.printRecord(com.getViewComment().get(i).getIdTransformed(), com.getViewComment().get(i).getUser(), com.getViewComment().get(i).getCommentTitle(),
-                                    com.getViewComment().get(i).getCommentContent(), com.getViewComment().get(i).getFilmRateTransformed(), com.getViewComment().get(i).getCreationDate(),
-                                    com.getViewComment().get(i).getTitle(), com.getViewComment().get(i).getFilmYearTransformed(), com.getViewComment().get(i).getFilmTimeTransformed(),
-                                    com.getViewComment().get(i).getCommentRate(), com.getViewComment().get(i).getCommentAnswersCountTransformed(), com.getViewComment().get(i).getCommentAnswersLastUser(),
-                                    com.getViewComment().get(i).getCommentAnswersLastDate());
+                        for (int i = 0; i < commentList.size(); i++) {
+                            exec.submit(new CSVExportThreads(csvPrinter, i, commentList));
                         }
                         csvPrinter.flush();
 
@@ -533,7 +533,7 @@ public class Controller  {
                         if (f.isFile()) {
                             countExistingFiles++;
                         } else {
-                            exec.submit(new ExportThreads(selectedDirectory, i, commentList));
+                            exec.submit(new FileExportThreads(selectedDirectory, i, commentList));
                         }
                     }
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -664,13 +664,13 @@ class NewThread implements Callable {
     }
 }
 
-class ExportThreads implements Runnable {
+class FileExportThreads implements Runnable {
 
     private File file;
     private Integer i;
     private ObservableList<Comment> com;
 
-    public ExportThreads(File file, Integer i, ObservableList<Comment> com) {
+    public FileExportThreads(File file, Integer i, ObservableList<Comment> com) {
         this.file = file;
         this.i = i;
         this.com = com;
@@ -709,6 +709,40 @@ class ExportThreads implements Runnable {
             writer.newLine();
             writer.append("COMMENT ANSWER LAST DATE: " + com.get(i).getCommentAnswersLastDate());
             writer.close();
+        }catch (Exception e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+}
+
+class CSVExportThreads implements Runnable {
+
+    private CSVPrinter csv;
+    private Integer i;
+    private ObservableList<Comment> com;
+
+    public CSVExportThreads(CSVPrinter csv, Integer i, ObservableList<Comment> com) {
+        this.csv = csv;
+        this.i = i;
+        this.com = com;
+
+        Thread thread = new Thread();
+        thread.start();
+    }
+
+    @Override
+    public synchronized void run()  {
+        try {
+            csv.printRecord(com.get(i).getIdTransformed(), com.get(i).getUser(), com.get(i).getCommentTitle(),
+                            com.get(i).getCommentContent(), com.get(i).getFilmRateTransformed(), com.get(i).getCreationDate(),
+                            com.get(i).getTitle(), com.get(i).getFilmYearTransformed(), com.get(i).getFilmTimeTransformed(),
+                            com.get(i).getCommentRate(), com.get(i).getCommentAnswersCountTransformed(), com.get(i).getCommentAnswersLastUser(),
+                            com.get(i).getCommentAnswersLastDate());
         }catch (Exception e){
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
