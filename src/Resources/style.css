@@ -1,0 +1,43 @@
+.root{
+-fx-background-color: lightsteelblue;
+-fx-font-weight: Bold;
+-fx-font-size: 15;
+-fx-label-padding: 10;
+}
+.button{
+-fx-background-radius: 15;
+}
+.text-field {
+-fx-background-radius: 15;
+-fx-pref-width: 150;
+}
+.date-picker{
+-fx-background-radius: 15;
+-fx-pref-width: 150;
+}
+.choice-box{
+-fx-background-radius: 15;
+-fx-pref-width: 150;
+}
+
+.button {
+-fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 20,0,0,0 );
+}
+#tfMinutesFrom{
+-fx-pref-width: 40;
+}
+#tfHoursFrom {
+-fx-pref-width: 40;
+}
+#tfHoursFrom1 {
+-fx-pref-width: 40;
+}
+#tfMinutesFrom1 {
+-fx-pref-width: 40;
+}
+#tfMinute {
+-fx-pref-width: 40;
+}
+#tfHours {
+-fx-pref-width: 40;
+}
