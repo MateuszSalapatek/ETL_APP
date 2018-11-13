@@ -397,6 +397,7 @@ public class Controller  {
 
             dataViewController trDataView = (dataViewController) loader.getController();
             stage.setTitle("Data View");
+            root.getStylesheets().add("Resources/style.css");
             stage.setScene(new Scene(root));
             stage.show();
 
