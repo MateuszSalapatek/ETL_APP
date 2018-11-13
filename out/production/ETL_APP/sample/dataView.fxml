@@ -22,7 +22,7 @@
    <children>
       <TableView fx:id="tvDataView" prefHeight="98.0" prefWidth="296.0" GridPane.columnSpan="2" GridPane.rowSpan="3">
          <columns>
-            <TableColumn fx:id="tcId" prefWidth="75.0" text="ID" />
+            <TableColumn fx:id="tcRowNum" prefWidth="75.0" text="Lp." />
             <TableColumn fx:id="tcAuthor" prefWidth="75.0" text="AUTHOR" />
             <TableColumn fx:id="tcCommentTittle" prefWidth="150.0" text="COMMENT TITTLE" />
             <TableColumn fx:id="tcCommentContent" prefWidth="417.0" text="COMMENT" />

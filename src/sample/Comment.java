@@ -34,6 +34,15 @@ public class Comment {
     private String commentAnswersLastUser;
     public String commentAnswersLastDate;
     public String commentLink;
+    public Integer commentRowNum;
+
+    public void setCommentRowNum(Integer commentRowNum) {
+        this.commentRowNum = commentRowNum;
+    }
+
+    public Integer getCommentRowNum() {
+        return commentRowNum;
+    }
 
     public void setCommentLink(String commentLink) {
         this.commentLink = commentLink;
@@ -245,7 +254,8 @@ public class Comment {
                                             "    commentrate,\n" +
                                             "    commentanswerscount,\n" +
                                             "    commentanswerslastuser,\n" +
-                                            "    commentanswerslastdate\n" +
+                                            "    commentanswerslastdate," +
+                                            "    ROWNUM\n" +
                                             "FROM comments\n" +
                                             "WHERE upper(nvl(author,'x0x0x')) LIKE '"+author+"%'\n" +
                                             "AND upper(nvl(COMMENTTITLE,'x0x0x')) LIKE '"+commentTittle+"%'\n" +
@@ -275,6 +285,7 @@ public class Comment {
                 com.setCommentAnswersCountTransformed(rs.getString(11));
                 com.setCommentAnswersLastUser((rs.getString(12)));
                 com.setCommentAnswersLastDate(rs.getString(13));
+                com.setCommentRowNum(rs.getInt(14));
                 commentViewList.add(com);
             }
         }

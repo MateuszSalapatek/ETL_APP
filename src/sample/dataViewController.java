@@ -19,7 +19,7 @@ public class dataViewController {
     private TableView tvDataView;
 
     @FXML
-    private TableColumn tcId, tcAuthor, tcCommentTittle, tcFilmRate, tcCreationDate, tcFilmTittle, tcFilmYear, tcFilmTime, tcCommentContent, tcCommentRate,
+    private TableColumn tcRowNum, tcAuthor, tcCommentTittle, tcFilmRate, tcCreationDate, tcFilmTittle, tcFilmYear, tcFilmTime, tcCommentContent, tcCommentRate,
             tcCommentAnswersCount, tcCommentAnswerUser, tcCommentsAnswerDate;
 
     @FXML
@@ -30,7 +30,7 @@ public class dataViewController {
     //this method is called when the table is opening and when onKeyReleased is calling for textfields filter
     public void showDataView() throws SQLException {
 
-        tcId.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("idTransformed"));
+        tcRowNum.setCellValueFactory(new PropertyValueFactory<Comment, Integer>("commentRowNum"));
         tcAuthor.setCellValueFactory(new PropertyValueFactory<Comment, String>("user"));
         tcCommentTittle.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentTitle"));
         tcCommentContent.setCellValueFactory(new PropertyValueFactory<Comment, String>("commentContent"));
