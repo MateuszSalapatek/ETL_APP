@@ -47,7 +47,6 @@ public class Controller  {
     //TODO bug CSV - polskie znaki
     //TODO bug CSV - niepełne dane
     //TODO sprawdzić poprawnośc angielskeigo
-    //TODO dorobić licznik wierszy w tabeli
     //TODO czy dodać link do kolumny?
     //TODO bug - na liście jest tylko 25 filmów
 
@@ -512,6 +511,11 @@ public class Controller  {
             Comment com = new Comment();
             Integer countExistingFiles = 0;
 
+            ObservableList<Comment> commentList;
+            commentList = com.getViewComment();
+
+            ExecutorService exec = Executors.newFixedThreadPool(commentList.size());
+
             Stage currentStage = new Stage();
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Choose the export place");
@@ -523,39 +527,13 @@ public class Controller  {
                 alert.setHeaderText("Foler has not been choosen");
                 alert.showAndWait();
             } else {
-                if(com.getViewComment().size()>0) {
-                    for (int i = 0; i < com.getViewComment().size(); i++) {
-                        File f = new File(selectedDirectory.getAbsolutePath() + "/" + com.getViewComment().get(i).getIdTransformed() + ".txt");
+                if(commentList.size()>0) {
+                    for (int i = 0; i < commentList.size(); i++) {
+                        File f = new File(selectedDirectory.getAbsolutePath() + "/" + commentList.get(i).getIdTransformed() + ".txt");
                         if (f.isFile()) {
                             countExistingFiles++;
                         } else {
-                            BufferedWriter writer = Files.newBufferedWriter(Paths.get(selectedDirectory.getAbsolutePath() + "/" + com.getViewComment().get(i).getIdTransformed() + ".txt"));
-                            writer.append("ID: " + com.getViewComment().get(i).getIdTransformed());
-                            writer.newLine();
-                            writer.append("AUTHOR: " + com.getViewComment().get(i).getUser());
-                            writer.newLine();
-                            writer.append("COMMENT TITTLE: " + com.getViewComment().get(i).getCommentTitle());
-                            writer.newLine();
-                            writer.append("COMMENT: " + com.getViewComment().get(i).getCommentContent());
-                            writer.newLine();
-                            writer.append("FILM RATE: " + com.getViewComment().get(i).getFilmRateTransformed());
-                            writer.newLine();
-                            writer.append("CREATION DATE: " + com.getViewComment().get(i).getCreationDate());
-                            writer.newLine();
-                            writer.append("FILM TITTLE: " + com.getViewComment().get(i).getTitle());
-                            writer.newLine();
-                            writer.append("FILM YEAR: " + com.getViewComment().get(i).getFilmYearTransformed());
-                            writer.newLine();
-                            writer.append("FILM TIME: " + com.getViewComment().get(i).getFilmTimeTransformed());
-                            writer.newLine();
-                            writer.append("COMMENT RATE: " + com.getViewComment().get(i).getCommentRate());
-                            writer.newLine();
-                            writer.append("COMMENT ANSWER COUNT: " + com.getViewComment().get(i).getCommentAnswersCountTransformed());
-                            writer.newLine();
-                            writer.append("COMMENT ANSWER LAST USER: " + com.getViewComment().get(i).getCommentAnswersLastUser());
-                            writer.newLine();
-                            writer.append("COMMENT ANSWER LAST DATE: " + com.getViewComment().get(i).getCommentAnswersLastDate());
-                            writer.close();
+                            exec.submit(new ExportThreads(selectedDirectory, i, commentList));
                         }
                     }
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -683,5 +661,61 @@ class NewThread implements Callable {
         ArrayList<Comment> threadComments = new ArrayList<>();
         threadComments.addAll(con.getCommentsFromPage(doc,el,url));
         return threadComments;
+    }
+}
+
+class ExportThreads implements Runnable {
+
+    private File file;
+    private Integer i;
+    private ObservableList<Comment> com;
+
+    public ExportThreads(File file, Integer i, ObservableList<Comment> com) {
+        this.file = file;
+        this.i = i;
+        this.com = com;
+
+        Thread thread = new Thread();
+        thread.start();
+    }
+
+    @Override
+    public void run() {
+        try {
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get(file.getAbsolutePath() + "/" + com.get(i).getIdTransformed() + ".txt"));
+            writer.append("ID: " + com.get(i).getIdTransformed());
+            writer.newLine();
+            writer.append("AUTHOR: " + com.get(i).getUser());
+            writer.newLine();
+            writer.append("COMMENT TITTLE: " + com.get(i).getCommentTitle());
+            writer.newLine();
+            writer.append("COMMENT: " + com.get(i).getCommentContent());
+            writer.newLine();
+            writer.append("FILM RATE: " + com.get(i).getFilmRateTransformed());
+            writer.newLine();
+            writer.append("CREATION DATE: " + com.get(i).getCreationDate());
+            writer.newLine();
+            writer.append("FILM TITTLE: " + com.get(i).getTitle());
+            writer.newLine();
+            writer.append("FILM YEAR: " + com.get(i).getFilmYearTransformed());
+            writer.newLine();
+            writer.append("FILM TIME: " + com.get(i).getFilmTimeTransformed());
+            writer.newLine();
+            writer.append("COMMENT RATE: " + com.get(i).getCommentRate());
+            writer.newLine();
+            writer.append("COMMENT ANSWER COUNT: " + com.get(i).getCommentAnswersCountTransformed());
+            writer.newLine();
+            writer.append("COMMENT ANSWER LAST USER: " + com.get(i).getCommentAnswersLastUser());
+            writer.newLine();
+            writer.append("COMMENT ANSWER LAST DATE: " + com.get(i).getCommentAnswersLastDate());
+            writer.close();
+        }catch (Exception e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
 }
