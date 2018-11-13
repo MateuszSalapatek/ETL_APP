@@ -15,28 +15,23 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import org.apache.commons.csv.CSVFormat;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.rmi.server.ExportException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.*;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -46,7 +41,6 @@ import static sample.OracleConn.*;
 
 public class Controller  {
 
-    //TODO export
     //TODO poprawić alerty, dodać wszędzie try catche
     //TODO plik z językiem
     //TODO jak zrobić progress bar??
@@ -55,6 +49,7 @@ public class Controller  {
     //TODO sprawdzić poprawnośc angielskeigo
     //TODO dorobić licznik wierszy w tabeli
     //TODO czy dodać link do kolumny?
+    //TODO bug - na liście jest tylko 25 filmów
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
     private ArrayList<Comment> extractedCommentsList;
@@ -464,26 +459,116 @@ public class Controller  {
                 alert.setHeaderText("Foler has not been choosen");
                 alert.showAndWait();
             } else {
-                BufferedWriter writer = Files.newBufferedWriter(Paths.get(selectedDirectory.getAbsolutePath() + "\\Comments.csv"));
+                if(com.getViewComment().size()>0) {
+                    File f = new File(selectedDirectory.getAbsolutePath() + "\\Comments.csv");
+                    if(f.isFile()){
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Export comments");
+                        alert.setHeaderText("Export is not possible - "+selectedDirectory.getAbsolutePath() + "\\Comments.csv" + " is already exists");
+                        alert.showAndWait();
+                    }else {
+                        BufferedWriter writer = Files.newBufferedWriter(Paths.get(selectedDirectory.getAbsolutePath() + "\\Comments.csv"));
+                        CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.EXCEL
+                                .withHeader("ID", "AUTHOR", "COMMENT TITTLE", "COMMENT", "FILM RATE", "CREATION DATE", "FILM TITTLE",
+                                        "FILM YEAR", "FILM TIME", "COMMENT RATE", "COMMENT ANSWER COUNT", "COMMENT ANSWER LAST USER", "COMMENT ANSWER LAST DATE"));
 
-                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                        .withHeader("ID", "AUTHOR", "COMMENT TITTLE", "COMMENT", "FILM RATE", "CREATION DATE", "FILM TITTLE",
-                                "FILM YEAR", "FILM TIME", "COMMENT RATE", "COMMENT ANSWER COUNT", "COMMENT ANSWER LAST USER", "COMMENT ANSWER LAST DATE"));
+                        for (int i = 0; i < com.getViewComment().size(); i++) {
+                            csvPrinter.printRecord(com.getViewComment().get(i).getIdTransformed(), com.getViewComment().get(i).getUser(), com.getViewComment().get(i).getCommentTitle(),
+                                    com.getViewComment().get(i).getCommentContent(), com.getViewComment().get(i).getFilmRateTransformed(), com.getViewComment().get(i).getCreationDate(),
+                                    com.getViewComment().get(i).getTitle(), com.getViewComment().get(i).getFilmYearTransformed(), com.getViewComment().get(i).getFilmTimeTransformed(),
+                                    com.getViewComment().get(i).getCommentRate(), com.getViewComment().get(i).getCommentAnswersCountTransformed(), com.getViewComment().get(i).getCommentAnswersLastUser(),
+                                    com.getViewComment().get(i).getCommentAnswersLastDate());
+                        }
+                        csvPrinter.flush();
 
-                for (int i = 0; i < com.getViewComment().size(); i++) {
-                    csvPrinter.printRecord(com.getViewComment().get(i).getIdTransformed(), com.getViewComment().get(i).getUser(), com.getViewComment().get(i).getCommentTitle(),
-                            com.getViewComment().get(i).getCommentContent(), com.getViewComment().get(i).getFilmRateTransformed(), com.getViewComment().get(i).getCreationDate(),
-                            com.getViewComment().get(i).getTitle(), com.getViewComment().get(i).getFilmYearTransformed(), com.getViewComment().get(i).getFilmTimeTransformed(),
-                            com.getViewComment().get(i).getCommentRate(), com.getViewComment().get(i).getCommentAnswersCountTransformed(), com.getViewComment().get(i).getCommentAnswersLastUser(),
-                            com.getViewComment().get(i).getCommentAnswersLastDate());
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setTitle("Export procedure");
+                        alert.setHeaderText("Export procedure finished successfully");
+                        alert.setContentText("Path for exported csv file is: " + selectedDirectory.getAbsolutePath() + "\\Comments.csv");
+                        alert.showAndWait();
+                    }
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Export comments");
+                    alert.setHeaderText("Export is not possible - Database is empty");
+                    alert.showAndWait();
                 }
-                csvPrinter.flush();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
 
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Export procedure");
-                alert.setHeaderText("Export procedure finished successfully");
-                alert.setContentText("Path for exported csv file is: " + selectedDirectory.getAbsolutePath() + "\\Comments.csv");
+    @FXML
+    private void clickExportFiles(ActionEvent event)  {
+
+        try {
+            Comment com = new Comment();
+            Integer countExistingFiles = 0;
+
+            Stage currentStage = new Stage();
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Choose the export place");
+            File selectedDirectory = directoryChooser.showDialog(currentStage);
+
+            if (selectedDirectory == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Folder choosing");
+                alert.setHeaderText("Foler has not been choosen");
                 alert.showAndWait();
+            } else {
+                if(com.getViewComment().size()>0) {
+                    for (int i = 0; i < com.getViewComment().size(); i++) {
+                        File f = new File(selectedDirectory.getAbsolutePath() + "/" + com.getViewComment().get(i).getIdTransformed() + ".txt");
+                        if (f.isFile()) {
+                            countExistingFiles++;
+                        } else {
+                            BufferedWriter writer = Files.newBufferedWriter(Paths.get(selectedDirectory.getAbsolutePath() + "/" + com.getViewComment().get(i).getIdTransformed() + ".txt"));
+                            writer.append("ID: " + com.getViewComment().get(i).getIdTransformed());
+                            writer.newLine();
+                            writer.append("AUTHOR: " + com.getViewComment().get(i).getUser());
+                            writer.newLine();
+                            writer.append("COMMENT TITTLE: " + com.getViewComment().get(i).getCommentTitle());
+                            writer.newLine();
+                            writer.append("COMMENT: " + com.getViewComment().get(i).getCommentContent());
+                            writer.newLine();
+                            writer.append("FILM RATE: " + com.getViewComment().get(i).getFilmRateTransformed());
+                            writer.newLine();
+                            writer.append("CREATION DATE: " + com.getViewComment().get(i).getCreationDate());
+                            writer.newLine();
+                            writer.append("FILM TITTLE: " + com.getViewComment().get(i).getTitle());
+                            writer.newLine();
+                            writer.append("FILM YEAR: " + com.getViewComment().get(i).getFilmYearTransformed());
+                            writer.newLine();
+                            writer.append("FILM TIME: " + com.getViewComment().get(i).getFilmTimeTransformed());
+                            writer.newLine();
+                            writer.append("COMMENT RATE: " + com.getViewComment().get(i).getCommentRate());
+                            writer.newLine();
+                            writer.append("COMMENT ANSWER COUNT: " + com.getViewComment().get(i).getCommentAnswersCountTransformed());
+                            writer.newLine();
+                            writer.append("COMMENT ANSWER LAST USER: " + com.getViewComment().get(i).getCommentAnswersLastUser());
+                            writer.newLine();
+                            writer.append("COMMENT ANSWER LAST DATE: " + com.getViewComment().get(i).getCommentAnswersLastDate());
+                            writer.close();
+                        }
+                    }
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Export procedure");
+                    alert.setHeaderText("Export procedure finished successfully");
+                    alert.setContentText("Path for exported files is: " + selectedDirectory.getAbsolutePath() +
+                            "\nQuantity of exported files: " + String.valueOf(com.getViewComment().size() - countExistingFiles));
+                    alert.showAndWait();
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Export comments");
+                    alert.setHeaderText("Export is not possible - Database is empty");
+                    alert.showAndWait();
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
