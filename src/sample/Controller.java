@@ -47,7 +47,9 @@ public class Controller  {
     //TODO bug CSV - niepełne dane, niepokolei dane - bug po uruchominiu wielowatkowości
     //TODO sprawdzić poprawnośc angielskeigo
     //TODO czy dodać link do kolumny?
-    //TODO bug - na liście jest tylko 25 filmów
+    //TODO #BUG - na liście jest tylko 25 filmów
+    //TODO #BUG jeżeli nie ma danych to "Export to CSV"/"Export to Files" pokazuje unexpexted error
+    //TODO jeżeli Klikamy Extraxt data to wszystkie buttony oprócz Transform i Cancel powinny być disabled
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
     private ArrayList<Comment> extractedCommentsList;
