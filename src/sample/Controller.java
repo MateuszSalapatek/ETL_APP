@@ -49,7 +49,6 @@ public class Controller  {
     //TODO sprawdzić poprawnośc angielskeigo
     //TODO czy dodać link do kolumny?
     //TODO #BUG - na liście jest tylko 25 filmów
-    //TODO #BUG jeżeli nie ma danych to "Export to CSV"/"Export to Files" pokazuje unexpexted error
     //TODO jeżeli Klikamy Extraxt data to wszystkie buttony oprócz Transform i Cancel powinny być disabled
 
     private static String top500html = "https://www.filmweb.pl/ranking/film";
@@ -455,8 +454,6 @@ public class Controller  {
             ObservableList<Comment> commentList;
             commentList = com.getViewComment();
 
-            ExecutorService exec = Executors.newFixedThreadPool(commentList.size());
-
             Stage currentStage = new Stage();
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Choose the export place");
@@ -465,7 +462,7 @@ public class Controller  {
             if (selectedDirectory == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Folder choosing");
-                alert.setHeaderText("Foler has not been choosen");
+                alert.setHeaderText("Folder has not been choosen");
                 alert.showAndWait();
             } else {
                 if(commentList.size()>0) {
@@ -476,6 +473,7 @@ public class Controller  {
                         alert.setHeaderText("Export is not possible - "+selectedDirectory.getAbsolutePath() + "\\Comments.csv" + " is already exists");
                         alert.showAndWait();
                     }else {
+                        ExecutorService exec = Executors.newFixedThreadPool(commentList.size());
                         BufferedWriter writer = Files.newBufferedWriter(Paths.get(selectedDirectory.getAbsolutePath() + "\\Comments.csv"));
                         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.EXCEL
                                 .withHeader("ID", "AUTHOR", "COMMENT TITTLE", "COMMENT", "FILM RATE", "CREATION DATE", "FILM TITTLE",
@@ -518,8 +516,6 @@ public class Controller  {
             ObservableList<Comment> commentList;
             commentList = com.getViewComment();
 
-            ExecutorService exec = Executors.newFixedThreadPool(commentList.size());
-
             Stage currentStage = new Stage();
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Choose the export place");
@@ -528,10 +524,11 @@ public class Controller  {
             if (selectedDirectory == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Folder choosing");
-                alert.setHeaderText("Foler has not been choosen");
+                alert.setHeaderText("Folder has not been choosen");
                 alert.showAndWait();
             } else {
                 if(commentList.size()>0) {
+                    ExecutorService exec = Executors.newFixedThreadPool(commentList.size());
                     for (int i = 0; i < commentList.size(); i++) {
                         File f = new File(selectedDirectory.getAbsolutePath() + "/" + commentList.get(i).getIdTransformed() + ".txt");
                         if (f.isFile()) {
