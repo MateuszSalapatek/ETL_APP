@@ -32,7 +32,9 @@ import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.concurrent.*;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -48,12 +50,12 @@ public class Controller  {
     //TODO bug CSV - niepełne dane, niepokolei dane - bug po uruchominiu wielowatkowości
     //TODO sprawdzić poprawnośc angielskeigo
     //TODO czy dodać link do kolumny?
-    //TODO #BUG - na liście jest tylko 25 filmów
     //TODO jeżeli Klikamy Extraxt data to wszystkie buttony oprócz Transform i Cancel powinny być disabled
 
-    private static String top500html = "https://www.filmweb.pl/ranking/film";
+    private static String allFilmsLink = "https://www.filmweb.pl/films/search?orderBy=popularity&descending=true&page=";
     private ArrayList<Comment> extractedCommentsList;
     private ArrayList<Comment> transformedCommentsList;
+    private ObservableList<Film> allFilms;
 
     @FXML
     private Button bETL, bExtract, bTransform, bLoad, bCancelExtracted;
@@ -69,7 +71,8 @@ public class Controller  {
         extractedCommentsList = null;
         extractedCommentsList = null;
         OracleConn Oracle = new OracleConn();
-        fillFilmsComboBox(getFilmsLOV());
+        allFilms = getFilmsLOV();
+        fillFilmsComboBox(allFilms);
     }
 
     public ArrayList<Comment> getComments(String url) throws IOException {
@@ -318,23 +321,51 @@ public class Controller  {
     public ObservableList<Film> getFilmsLOV() throws IOException {
 
         try {
-            Document doc = Jsoup.connect(top500html).get();
-            Elements rankingListPage = doc.getElementsByClass("item");
-            ObservableList<Film> filmsTitles = observableArrayList();
+            ExecutorService exec = Executors.newFixedThreadPool(50);
+            ArrayList<Future<ArrayList<Film>>> call_list=  new ArrayList<Future<ArrayList<Film>>>();
+            for(int i =1;i<=1000;i++) {
+                call_list.add(exec.submit(new AllFilmsThread(allFilmsLink + i)));
+            }
 
-            for (Element rankingList : rankingListPage) {
-                Film filmObject = new Film();
-
-                filmObject.setTittle(rankingList.select(".film__link").html()); //film tittle
-                filmObject.setUrl("https://www.filmweb.pl" + rankingList.select(".film__link").attr("href") + "/discussion?plusMinus=false&page=");
-
-                if (!filmObject.getTittle().equals("")) {
-                    filmsTitles.add(filmObject);
+            ObservableList<Film> filmsList = observableArrayList();
+            for(Future<ArrayList<Film>> str:call_list){
+                try{
+                    filmsList.addAll(str.get());
+                }catch(InterruptedException e){
+                    System.out.println(e);
+                }catch(ExecutionException e){
+                    System.out.println(e);
+                }finally {
+                    exec.shutdown();
                 }
             }
-            return filmsTitles;
+            return filmsList;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<Film> getFilmsFromPage( Document doc ){
+        try {
+            Elements fbFilms = doc.getElementsByClass("hits__item");
+            ArrayList<Film> filmsList = new ArrayList<Film>();
+
+            for (Element filmCategory : fbFilms) {
+                Film filmObject = new Film();
+
+                filmObject.setTittle(filmCategory.select(".filmPreview__title").html()); //film tittle
+                filmObject.setUrl("https://www.filmweb.pl" + filmCategory.select(".filmPreview__link").attr("href") + "/discussion?plusMinus=false&page=");
+                filmsList.add(filmObject);
+            }
+            return filmsList;
+        }catch (Exception e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
             return null;
         }
     }
@@ -428,7 +459,7 @@ public class Controller  {
         try {
 
             ObservableList<Film> filmsList;
-            filmsList = getFilmsLOV();
+            filmsList = allFilms;
 
             for (int i = 0; i < filmsList.size(); i++) {
                 ArrayList<Comment> extractedList = Controller.this.getComments(filmsList.get(i).getUrl());
@@ -630,8 +661,8 @@ public class Controller  {
         //function to convert url to name of film
         cbPickFilm.setConverter(new StringConverter<Film>() {
             @Override
-            public String toString(Film uni) {
-                return uni.getTittle();
+            public String toString(Film film) {
+                return film.getTittle();
             }
 
             @Override
@@ -771,5 +802,27 @@ class CSVExportThreads implements Runnable {
             alert.setContentText(e.getMessage());
             alert.showAndWait();
         }
+    }
+}
+
+class AllFilmsThread implements Callable {
+
+    private String  url;
+    private Elements el;
+    private Document doc;
+
+
+    AllFilmsThread(String link){
+        this.url = link;
+    }
+
+    @Override
+    public ArrayList<Film> call() throws Exception {
+        this.doc = Jsoup.connect(url ).get();
+        this.el = Jsoup.connect(url).get().getElementsByClass("hits");
+        Controller con = new Controller();
+        ArrayList<Film> threadFilms = new ArrayList<>();
+        threadFilms.addAll(con.getFilmsFromPage(doc));
+        return threadFilms;
     }
 }
