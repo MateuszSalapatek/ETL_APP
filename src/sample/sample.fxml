@@ -124,7 +124,7 @@
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="bLoad" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickLoadButton" prefHeight="36.0" prefWidth="102.0" text="Load Data" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <Button fx:id="bLoad" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickLoadButton" prefHeight="36.0" prefWidth="102.0" text="Load Data" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <padding>
                   <Insets left="10.0" right="10.0" />
                </padding>
@@ -132,7 +132,7 @@
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="bTransform" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickTransformButton" prefHeight="36.0" prefWidth="129.0" text="Transform Data" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <Button fx:id="bTransform" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickTransformButton" prefHeight="36.0" prefWidth="129.0" text="Transform Data" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <padding>
                   <Insets left="10.0" right="10.0" />
                </padding>
@@ -181,12 +181,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-             <ComboBox fx:id="cbPickFilm" maxWidth="1.7976931348623157E308" promptText="Wybierz film" GridPane.columnSpan="2" GridPane.rowIndex="1">
+             <ComboBox fx:id="cbPickFilm" maxWidth="1.7976931348623157E308" promptText="Choose movie" GridPane.columnSpan="2" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
             </ComboBox>
-            <Label maxWidth="1.7976931348623157E308" text="Choose movie from TOP 500 list" GridPane.columnSpan="2">
+            <Label maxWidth="1.7976931348623157E308" text="Choose movie from films list" GridPane.columnSpan="2">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
