@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Screen;
@@ -60,6 +61,9 @@ public class Controller  {
 
     @FXML
     private ComboBox cbPickFilm;
+
+    @FXML
+    private RadioButton rbExportFiles, rbExportCSV;
 
     @FXML
     private void initialize() throws IOException, SQLException {
@@ -444,8 +448,7 @@ public class Controller  {
         }
     }
 
-    @FXML
-    private void clickExportCSV(ActionEvent event) throws SQLException, IOException {
+    private void clickExportCSV() throws SQLException, IOException {
 
         try {
             Comment com = new Comment();
@@ -506,8 +509,7 @@ public class Controller  {
         }
     }
 
-    @FXML
-    private void clickExportFiles(ActionEvent event)  {
+    private void clickExportFiles()  {
 
         try {
             Comment com = new Comment();
@@ -595,6 +597,25 @@ public class Controller  {
                 alert.setTitle("Database");
                 alert.setHeaderText("The database is empty");
                 alert.showAndWait();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void clickDownloadButton(ActionEvent event) {
+        try {
+            if (rbExportCSV.isSelected()){
+                clickExportCSV();
+            }
+            else if (rbExportFiles.isSelected()){
+                clickExportFiles();
             }
         } catch (Exception e) {
             e.printStackTrace();
