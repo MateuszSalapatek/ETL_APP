@@ -7,10 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Screen;
@@ -64,13 +62,54 @@ public class Controller  {
     @FXML
     private RadioButton rbExportFiles, rbExportCSV;
 
+    private String matchingString = "";
+
+    @FXML
+    private Label lMatchingString;
+
     @FXML
     private void initialize() throws IOException, SQLException {
         extractedCommentsList = null;
         extractedCommentsList = null;
-        OracleConn Oracle = new OracleConn();
+        new OracleConn();
         allFilms = getFilmsLOV();
         fillFilmsComboBox(allFilms);
+
+        ObservableList<Film> filteredFilms =  observableArrayList();
+
+        cbPickFilm.setOnKeyReleased(e -> {
+            if(e.getCode().equals(KeyCode.BACK_SPACE)) {
+                if (matchingString.length() > 0) {
+                    matchingString = matchingString.substring(0, matchingString.length() - 1);
+                }
+            }else if (e.getText().toUpperCase().equals("N") && e.isAltDown() ){
+                matchingString = matchingString + "Ń";
+            }else if (e.getText().toUpperCase().equals("O") && e.isAltDown() ){
+                matchingString = matchingString + "Ó";
+            }else if (e.getText().toUpperCase().equals("E") && e.isAltDown() ){
+                matchingString = matchingString + "Ę";
+            }else if (e.getText().toUpperCase().equals("Z") && e.isAltDown() ){
+                matchingString = matchingString + "Ż";
+            }else if (e.getText().toUpperCase().equals("X") && e.isAltDown() ){
+                matchingString = matchingString + "Ź";
+            }else if (e.getText().toUpperCase().equals("S") && e.isAltDown() ){
+                matchingString = matchingString + "Ś";
+            }else if (e.getText().toUpperCase().equals("C") && e.isAltDown() ){
+                matchingString = matchingString + "Ć";
+            }else if (e.getText().toUpperCase().equals("L") && e.isAltDown() ) {
+                matchingString = matchingString + "Ł";
+            }else {
+                matchingString = matchingString + String.valueOf(e.getText().toUpperCase());
+            }
+            for (int i = 0; i<allFilms.size(); i++){
+                if(allFilms.get(i).getTittle().toUpperCase().startsWith(matchingString)) {
+                    filteredFilms.add(allFilms.get(i));
+                }
+            }
+            fillFilmsComboBox(filteredFilms);
+            filteredFilms.clear();
+            lMatchingString.setText(matchingString);
+        });
     }
 
     public ArrayList<Comment> getComments(String url) throws IOException {
@@ -199,6 +238,7 @@ public class Controller  {
             alert.setContentText("Quantity of extracted comments: " + extractedList.size() + "\n" +
                     "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
             alert.showAndWait();
+            clearFilmLOVAfterLoading();
         }
     }
 
@@ -292,6 +332,7 @@ public class Controller  {
         cbPickFilm.setDisable(false);
         bETL.setDisable(false);
         bCancelExtracted.setDisable(true);
+        clearFilmLOVAfterLoading();
     }
 
     @FXML
@@ -306,6 +347,7 @@ public class Controller  {
             if(extractedCommentsList.size()>0) {
                 extractedCommentsList.clear();
             }
+            clearFilmLOVAfterLoading();
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -321,7 +363,7 @@ public class Controller  {
         try {
             ExecutorService exec = Executors.newFixedThreadPool(50);
             ArrayList<Future<ArrayList<Film>>> call_list=  new ArrayList<Future<ArrayList<Film>>>();
-            for(int i =1;i<=1000;i++) {
+            for(int i =1;i<=10;i++) {
                 call_list.add(exec.submit(new AllFilmsThread(allFilmsLink + i)));
             }
 
@@ -469,8 +511,9 @@ public class Controller  {
                         deleteCounter++;
                     }
                 }
-                System.out.println("Linia: " + i + ", pobrano " + extractedList.size() + "komentarzy");
+                System.out.println("Linia: " + i + ", pobrano " + String.valueOf(extractedList.size() - deleteCounter) + " komentarzy");
             }
+            clearFilmLOVAfterLoading();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -690,6 +733,11 @@ public class Controller  {
             return false;
         }
     }
+    public void clearFilmLOVAfterLoading(){
+        matchingString = "";
+        lMatchingString.setText(matchingString);
+        fillFilmsComboBox(allFilms);
+    }
 }
 class NewThread implements Callable {
 
@@ -821,6 +869,7 @@ class AllFilmsThread implements Callable {
         Controller con = new Controller();
         ArrayList<Film> threadFilms = new ArrayList<>();
         threadFilms.addAll(con.getFilmsFromPage(doc));
+        System.out.println("film: "+threadFilms.get(0));
         return threadFilms;
     }
 }
