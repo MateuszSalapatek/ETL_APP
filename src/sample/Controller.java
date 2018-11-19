@@ -22,6 +22,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
+import javax.swing.text.html.Option;
+import javax.xml.bind.annotation.XmlType;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +45,6 @@ public class Controller  {
     //TODO poprawić alerty, dodać wszędzie try catche
     //TODO plik z językiem
     //TODO jak zrobić progress bar??
-    //TODO bug CSV - niepełne dane, niepokolei dane - bug po uruchominiu wielowatkowości
     //TODO sprawdzić poprawnośc angielskeigo
     //TODO czy dodać link do kolumny?
     //TODO jeżeli Klikamy Extraxt data to wszystkie buttony oprócz Transform i Cancel powinny być disabled
@@ -67,6 +68,8 @@ public class Controller  {
     @FXML
     private Label lMatchingString;
 
+    private static final CSVFormat CSVFORMAT = null;
+
     @FXML
     private void initialize() throws IOException, SQLException {
         extractedCommentsList = null;
@@ -74,6 +77,9 @@ public class Controller  {
         new OracleConn();
         allFilms = getFilmsLOV();
         fillFilmsComboBox(allFilms);
+
+
+
 
         ObservableList<Film> filteredFilms =  observableArrayList();
 
@@ -210,6 +216,11 @@ public class Controller  {
             commentList.get(i).setFilmYearTransformed(Integer.parseInt(commentList.get(i).getFilmYear().replaceAll("[^0-9]", "")));
             commentList.get(i).setCommentAnswersCountTransformed(commentList.get(i).getCommentAnswersCount().replaceAll("[^0-9]", ""));
             commentList.get(i).setFilmTimeTransformed(commentList.get(i).getFilmTime().replaceAll("[^0-9]", ""));
+
+            //because ';' is special symbol, during export to CSV
+            commentList.get(i).setUser(commentList.get(i).getUser().replaceAll(";","."));
+            commentList.get(i).setCommentTitle(commentList.get(i).getCommentTitle().replaceAll(";","."));
+            commentList.get(i).setCommentContent(commentList.get(i).getCommentContent().replaceAll(";","."));
         }
 
         return commentList;
@@ -547,12 +558,17 @@ public class Controller  {
                     }else {
                         ExecutorService exec = Executors.newFixedThreadPool(commentList.size());
                         BufferedWriter writer = Files.newBufferedWriter(Paths.get(selectedDirectory.getAbsolutePath() + "\\Comments.csv"));
-                        CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.EXCEL
+
+                        CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.EXCEL.withDelimiter(';')
                                 .withHeader("ID", "AUTHOR", "COMMENT TITTLE", "COMMENT", "FILM RATE", "CREATION DATE", "FILM TITTLE",
                                         "FILM YEAR", "FILM TIME", "COMMENT RATE", "COMMENT ANSWER COUNT", "COMMENT ANSWER LAST USER", "COMMENT ANSWER LAST DATE"));
 
                         for (int i = 0; i < commentList.size(); i++) {
-                            exec.submit(new CSVExportThreads(csvPrinter, i, commentList));
+                            csvPrinter.printRecord(commentList.get(i).getIdTransformed(), commentList.get(i).getUser(), commentList.get(i).getCommentTitle(),
+                                    commentList.get(i).getCommentContent(), commentList.get(i).getFilmRateTransformed(), commentList.get(i).getCreationDate(),
+                                    commentList.get(i).getTitle(), commentList.get(i).getFilmYearTransformed(), commentList.get(i).getFilmTimeTransformed(),
+                                    commentList.get(i).getCommentRate(), commentList.get(i).getCommentAnswersCountTransformed(), commentList.get(i).getCommentAnswersLastUser(),
+                                    commentList.get(i).getCommentAnswersLastDate());
                         }
                         csvPrinter.flush();
 
@@ -816,41 +832,6 @@ class FileExportThreads implements Runnable {
         }
     }
 }
-
-class CSVExportThreads implements Runnable {
-
-    private CSVPrinter csv;
-    private Integer i;
-    private ObservableList<Comment> com;
-
-    public CSVExportThreads(CSVPrinter csv, Integer i, ObservableList<Comment> com) {
-        this.csv = csv;
-        this.i = i;
-        this.com = com;
-
-        Thread thread = new Thread();
-        thread.start();
-    }
-
-    @Override
-    public synchronized void run()  {
-        try {
-            csv.printRecord(com.get(i).getIdTransformed(), com.get(i).getUser(), com.get(i).getCommentTitle(),
-                    com.get(i).getCommentContent(), com.get(i).getFilmRateTransformed(), com.get(i).getCreationDate(),
-                    com.get(i).getTitle(), com.get(i).getFilmYearTransformed(), com.get(i).getFilmTimeTransformed(),
-                    com.get(i).getCommentRate(), com.get(i).getCommentAnswersCountTransformed(), com.get(i).getCommentAnswersLastUser(),
-                    com.get(i).getCommentAnswersLastDate());
-        }catch (Exception e){
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Unexpected error");
-            alert.setHeaderText("Unexpected error - contact with administrator");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-        }
-    }
-}
-
 class AllFilmsThread implements Callable {
 
     private String  url;
