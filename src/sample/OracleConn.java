@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.scene.control.Alert;
+
 import java.sql.*;
 
 public class OracleConn {
@@ -17,8 +19,12 @@ public class OracleConn {
             conn = DriverManager.getConnection(db_url,user,password);
             stat = conn.createStatement();
         } catch (SQLException e) {
-            System.err.println("Problem z otwarciem polaczenia");
             e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
         }
     }
 }
