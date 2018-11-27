@@ -16,5 +16,7 @@ public class Main extends Application {
         root.getStylesheets().add("Resources/style.css");
         primaryStage.setScene(new Scene(root, 600 , 350));
         primaryStage.show();
+
+
     }
 }

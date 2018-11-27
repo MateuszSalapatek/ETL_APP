@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane id="GridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Resources/style.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<GridPane id="GridPane" fx:id="gp" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Resources/style.css" GridPane.halignment="CENTER" GridPane.valignment="CENTER" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -25,7 +25,7 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickClearDatabase" prefHeight="36.0" prefWidth="139.0" text="Clear Database" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+        <Button fx:id="bClearDB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickClearDatabase" prefHeight="36.0" prefWidth="139.0" text="Clear Database" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
             <GridPane.margin>
                 <Insets left="10.0" right="10.0" />
             </GridPane.margin></Button>
@@ -56,7 +56,7 @@
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
                 </RadioButton>
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDownloadButton" prefHeight="38.0" prefWidth="53.0" text="Download" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <Button fx:id="bDownload" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDownloadButton" prefHeight="38.0" prefWidth="53.0" text="Download" GridPane.columnSpan="2" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="10.0" right="10.0" />
                     </GridPane.margin>
@@ -73,7 +73,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label maxWidth="1.7976931348623157E308" text="Extract, Transform and Load data" GridPane.columnSpan="2">
+                <Label fx:id="lExtract" maxWidth="1.7976931348623157E308" text="Extract, Transform and Load data" GridPane.columnSpan="2">
                     <GridPane.margin>
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
@@ -85,7 +85,7 @@
                 </Button>
             </children>
         </GridPane>
-        <GridPane GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+        <GridPane fx:id="bETLAll" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -95,12 +95,12 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="bETL1" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickETLButtonAll" prefHeight="35.0" prefWidth="72.0" text="ETL All" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <Button fx:id="bETLall" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickETLButtonAll" prefHeight="35.0" prefWidth="72.0" text="ETL All" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
                 </Button>
-                <Label maxWidth="1.7976931348623157E308" text="Extract, Transform and Load data for all movies" GridPane.columnSpan="2">
+                <Label fx:id="lETL" maxWidth="1.7976931348623157E308" text="Extract, Transform and Load data for all movies" GridPane.columnSpan="2">
                     <GridPane.margin>
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
@@ -148,7 +148,7 @@
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
                 </Button>
-                <Label maxWidth="1.7976931348623157E308" text="Processing data step by step" GridPane.columnSpan="4">
+                <Label fx:id="lProcessData" maxWidth="1.7976931348623157E308" text="Processing data step by step" GridPane.columnSpan="4">
                     <GridPane.margin>
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
@@ -164,7 +164,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickOpenTableView" prefHeight="36.0" prefWidth="107.0" text="Table View" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                <Button fx:id="bTableView" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickOpenTableView" prefHeight="36.0" prefWidth="107.0" text="Table View" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                     <GridPane.margin>
                         <Insets left="10.0" right="10.0" />
                     </GridPane.margin>
@@ -198,11 +198,11 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <Label fx:id="lTittle" alignment="CENTER" text="FILMWEB ETL" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                <Label fx:id="lAuthors" text="by Mateusz Sałapatek, Dariusz Lurka, Piotr Hereda" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                <Label fx:id="lAuthors_Progress" text="by Mateusz Sałapatek, Dariusz Lurka, Piotr Hereda" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             </children>
         </GridPane>
     </children>

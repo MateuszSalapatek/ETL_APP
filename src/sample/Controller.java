@@ -9,7 +9,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -22,8 +22,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
-import javax.swing.text.html.Option;
-import javax.xml.bind.annotation.XmlType;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -50,12 +48,14 @@ public class Controller  {
     //TODO jeżeli Klikamy Extraxt data to wszystkie buttony oprócz Transform i Cancel powinny być disabled
 
     private static String allFilmsLink = "https://www.filmweb.pl/films/search?orderBy=popularity&descending=true&page=";
+    private static String authors = "by Mateusz Sałapatek, Dariusz Lurka, Piotr Hereda";
+    private static String progressing = "Please wait...";
     private ArrayList<Comment> extractedCommentsList;
     private ArrayList<Comment> transformedCommentsList;
     private ObservableList<Film> allFilms;
 
     @FXML
-    private Button bETL, bExtract, bTransform, bLoad, bCancelExtracted;
+    private Button bETL, bExtract, bTransform, bLoad, bCancelExtracted, bDownload, bUpdateLoadedData, bClearDB, bETLall, bTableView;
 
     @FXML
     private ComboBox cbPickFilm;
@@ -66,28 +66,32 @@ public class Controller  {
     private String matchingString = "";
 
     @FXML
-    private Label lMatchingString;
+    private Label lMatchingString, lAuthors_Progress, lProcessData, lETL, lExtract;
 
-    private static final CSVFormat CSVFORMAT = null;
 
     @FXML
-    private void initialize() throws IOException, SQLException {
+    private GridPane gp;
+
+
+    @FXML
+    private void initialize() throws IOException, SQLException, InterruptedException {
+
+
         extractedCommentsList = null;
         extractedCommentsList = null;
         new OracleConn();
         allFilms = getFilmsLOV();
         fillFilmsComboBox(allFilms);
-
-
-
-
         ObservableList<Film> filteredFilms =  observableArrayList();
+        lAuthors_Progress.setText(authors);
 
         cbPickFilm.setOnKeyReleased(e -> {
             if(e.getCode().equals(KeyCode.BACK_SPACE)) {
                 if (matchingString.length() > 0) {
                     matchingString = matchingString.substring(0, matchingString.length() - 1);
                 }
+            }else if(e.getCode().equals(KeyCode.ENTER)){
+                //do nothing
             }else if (e.getText().toUpperCase().equals("N") && e.isAltDown() ){
                 matchingString = matchingString + "Ń";
             }else if (e.getText().toUpperCase().equals("O") && e.isAltDown() ){
@@ -228,28 +232,49 @@ public class Controller  {
 
     @FXML
     private void clickETLButton(ActionEvent event) throws SQLException, IOException {
-        if (cbPickFilm.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Select film");
-            alert.setHeaderText("Please, choose the film tittle");
-            alert.showAndWait();
-        } else {
-            ArrayList<Comment> extractedList = Controller.this.getComments(cbPickFilm.getValue().toString());
-            ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
-            Integer deleteCounter = 0;
-            for (int i = 0; i < tranformedList.size(); i++) {
-                Boolean load = loadCommentToDB(tranformedList.get(i));
-                if (!load) {
-                    deleteCounter++;
+        try {
+            if (cbPickFilm.getValue() == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Select film");
+                alert.setHeaderText("Please, choose the film tittle");
+                alert.showAndWait();
+            } else {
+
+                useProgressingWindow(false);
+
+                Alert info = new Alert(Alert.AlertType.CONFIRMATION);
+                info.setTitle("ETL procedure");
+                info.setHeaderText("ETL procedure will start, please confirm");
+                info.showAndWait();
+
+                ArrayList<Comment> extractedList = Controller.this.getComments(cbPickFilm.getValue().toString());
+                ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+                Integer deleteCounter = 0;
+                for (int i = 0; i < tranformedList.size(); i++) {
+                    Boolean load = loadCommentToDB(tranformedList.get(i));
+                    if (!load) {
+                        deleteCounter++;
+                    }
                 }
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("ETL procedure");
+                alert.setHeaderText("ETL procedure finished successfully");
+                alert.setContentText("Quantity of extracted comments: " + extractedList.size() + "\n" +
+                        "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
+                alert.showAndWait();
+
+                clearFilmLOVAfterLoading();
+
             }
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("ETL procedure");
-            alert.setHeaderText("ETL procedure finished successfully");
-            alert.setContentText("Quantity of extracted comments: " + extractedList.size() + "\n" +
-                    "Quantity of loaded comments: " + (tranformedList.size() - deleteCounter));
+        }catch (Exception e){
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Unexpected error");
+            alert.setHeaderText("Unexpected error - contact with administrator");
+            alert.setContentText(e.getMessage());
             alert.showAndWait();
-            clearFilmLOVAfterLoading();
+        }finally {
+            useProgressingWindow(true);
         }
     }
 
@@ -754,6 +779,31 @@ public class Controller  {
         lMatchingString.setText(matchingString);
         fillFilmsComboBox(allFilms);
     }
+    public void useProgressingWindow(Boolean flag){
+
+            bETL.setVisible(flag);
+            bExtract.setVisible(flag);
+            bTransform.setVisible(flag);
+            bLoad.setVisible(flag);
+            bCancelExtracted.setVisible(flag);
+            cbPickFilm.setVisible(flag);
+            rbExportFiles.setVisible(flag);
+            rbExportCSV.setVisible(flag);
+            bDownload.setVisible(flag);
+            bUpdateLoadedData.setVisible(flag);
+            bClearDB.setVisible(flag);
+            bETLall.setVisible(flag);
+            bTableView.setVisible(flag);
+            lETL.setVisible(flag);
+            lProcessData.setVisible(flag);
+            lExtract.setVisible(flag);
+            lMatchingString.setVisible(flag);
+            if(!flag){
+                lAuthors_Progress.setText(progressing);
+            }else{
+                lAuthors_Progress.setText(authors);
+            }
+    }
 }
 class NewThread implements Callable {
 
@@ -850,7 +900,6 @@ class AllFilmsThread implements Callable {
         Controller con = new Controller();
         ArrayList<Film> threadFilms = new ArrayList<>();
         threadFilms.addAll(con.getFilmsFromPage(doc));
-        System.out.println("film: "+threadFilms.get(0));
         return threadFilms;
     }
 }
