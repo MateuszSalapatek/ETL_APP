@@ -1,14 +1,16 @@
 .root{
--fx-background-color: lightsteelblue;
+-fx-background-color: #DCDCDC;
 -fx-font-weight: Bold;
 -fx-font-size: 15;
 -fx-label-padding: 10;
+-fx-padding: 30;
 }
 .button{
--fx-background-radius: 15;
+-fx-background-radius: 5;
+-fx-background-color: #EEEEEE;
 }
 .text-field {
--fx-background-radius: 15;
+-fx-background-radius: 5;
 -fx-pref-width: 150;
 }
 .date-picker{
@@ -21,7 +23,10 @@
 }
 
 .button {
+-fx-effect: border-radius: 5px;
 -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 20,0,0,0 );
+
+
 }
 #tfMinutesFrom{
 -fx-pref-width: 40;
