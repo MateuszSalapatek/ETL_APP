@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FilmwebETL">
+    <output-path>$PROJECT_DIR$/out/artifacts/FilmwebETL</output-path>
+    <root id="archive" name="ETL_APP.jar">
+      <element id="module-output" name="ETL_APP" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/commons/commons-csv/1.5/commons-csv-1.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/Resources/jsoup-1.11.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/Resources/ojdbc6.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

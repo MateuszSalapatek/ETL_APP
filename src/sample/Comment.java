@@ -40,9 +40,6 @@ public class Comment {
         this.commentRowNum = commentRowNum;
     }
 
-    public Integer getCommentRowNum() {
-        return commentRowNum;
-    }
 
     public void setCommentLink(String commentLink) {
         this.commentLink = commentLink;

@@ -21,7 +21,7 @@ public class Main extends Application {
         primaryStage.setHeight(bounds.getHeight()/2);
         /////////////////////////////////
 
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("ETLForm.fxml"));
         primaryStage.setTitle("ETL Application");
         root.getStylesheets().add("Resources/style.css");
         primaryStage.setScene(new Scene(root));

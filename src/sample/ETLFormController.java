@@ -37,7 +37,7 @@ import java.util.concurrent.*;
 import static javafx.collections.FXCollections.observableArrayList;
 import static sample.OracleConn.*;
 
-public class Controller  {
+public class ETLFormController {
 
     private static final String allFilmsLink = "https://www.filmweb.pl/films/search?orderBy=popularity&descending=true&page=";
     private static final String authors = "by Mateusz Sałapatek, Dariusz Lurka, Piotr Hereda";
@@ -267,8 +267,8 @@ public class Controller  {
                 useProgressingWindow(false);
                 showConfirmationWindow("ETL procedure will start, please confirm");
 
-                ArrayList<Comment> extractedList = Controller.this.getComments(cbPickFilm.getValue().toString());
-                ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+                ArrayList<Comment> extractedList = ETLFormController.this.getComments(cbPickFilm.getValue().toString());
+                ArrayList<Comment> tranformedList = ETLFormController.this.transformComments(extractedList);
                 Integer deleteCounter = 0;
                 for (int i = 0; i < tranformedList.size(); i++) {
                     Boolean load = loadCommentToDB(tranformedList.get(i));
@@ -310,7 +310,7 @@ public class Controller  {
                 useProgressingWindow(false);
                 showConfirmationWindow("Extract procedure will start, please confirm");
 
-                extractedCommentsList = Controller.this.getComments(cbPickFilm.getValue().toString());
+                extractedCommentsList = ETLFormController.this.getComments(cbPickFilm.getValue().toString());
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Extract procedure");
@@ -448,7 +448,7 @@ public class Controller  {
         try {
             ExecutorService exec = Executors.newFixedThreadPool(50);
             ArrayList<Future<ArrayList<Film>>> call_list=  new ArrayList<Future<ArrayList<Film>>>();
-            for(int i =1;i<=1000;i++) {
+            for(int i =1;i<=100;i++) {
                 call_list.add(exec.submit(new AllFilmsThread(allFilmsLink + i)));
             }
 
@@ -564,9 +564,9 @@ public class Controller  {
             stage.setHeight(bounds.getHeight());
             /////////////////////////////////
 
-            root = loader.load(getClass().getResource("dataView.fxml").openStream());
+            root = loader.load(getClass().getResource("DataView.fxml").openStream());
 
-            dataViewController trDataView = (dataViewController) loader.getController();
+            DataViewController trDataView = (DataViewController) loader.getController();
             stage.setTitle("Data View");
             root.getStylesheets().add("Resources/style.css");
             stage.setScene(new Scene(root));
@@ -603,8 +603,8 @@ public class Controller  {
                 ObservableList<Film> filmsList;
                 filmsList = allFilms;
                 for (int i = 0; i < filmsList.size(); i++) {
-                    ArrayList<Comment> extractedList = Controller.this.getComments(filmsList.get(i).getUrl());
-                    ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+                    ArrayList<Comment> extractedList = ETLFormController.this.getComments(filmsList.get(i).getUrl());
+                    ArrayList<Comment> tranformedList = ETLFormController.this.transformComments(extractedList);
                     Integer deleteCounter = 0;
                     for (int j = 0; j < tranformedList.size(); j++) {
                         Boolean load = loadCommentToDB(tranformedList.get(j));
@@ -766,8 +766,8 @@ public class Controller  {
                     showConfirmationWindow("Update DB procedure will start, please confirm");
 
                     for ( int j = 0; j<commentsLinks.size(); j++ ) {
-                        ArrayList<Comment> extractedList = Controller.this.getComments(commentsLinks.get(j));
-                        ArrayList<Comment> tranformedList = Controller.this.transformComments(extractedList);
+                        ArrayList<Comment> extractedList = ETLFormController.this.getComments(commentsLinks.get(j));
+                        ArrayList<Comment> tranformedList = ETLFormController.this.transformComments(extractedList);
                         commentsQty = commentsQty + tranformedList.size();
                         for (int i = 0; i < tranformedList.size(); i++) {
                             loadCommentToDB(tranformedList.get(i));
@@ -929,7 +929,7 @@ class CommentsThread implements Callable {
     public ArrayList<Comment> call() throws Exception {
         this.doc = Jsoup.connect(url ).get();
         this.el = Jsoup.connect(url).get().getElementsByClass("filmPage");
-        Controller con = new Controller();
+        ETLFormController con = new ETLFormController();
         ArrayList<Comment> threadComments = new ArrayList<>();
         threadComments.addAll(con.getCommentsFromPage(doc,el,url));
         return threadComments;
@@ -1005,7 +1005,7 @@ class AllFilmsThread implements Callable {
     public ArrayList<Film> call() throws Exception {
         this.doc = Jsoup.connect(url ).get();
         this.el = Jsoup.connect(url).get().getElementsByClass("hits");
-        Controller con = new Controller();
+        ETLFormController con = new ETLFormController();
         ArrayList<Film> threadFilms = new ArrayList<>();
         threadFilms.addAll(con.getFilmsFromPage(doc));
         return threadFilms;

@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="FilmwebETL" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/app_etl/src/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app_etl/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app_etl/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ETL_APP/sample/dataView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/ETL_APP/sample/dataView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ETL_APP/sample/sample.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ETLFormController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/dataView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/DataView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/dataViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/DataViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/sample.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ETLForm.fxml" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -93,11 +108,11 @@
     <session id="1143519300">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="25" />
+          <entry key="project.closed" value="26" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.10" value="2" />
           <entry key="project.open.time.11" value="4" />
-          <entry key="project.open.time.12" value="3" />
+          <entry key="project.open.time.12" value="4" />
           <entry key="project.open.time.13" value="2" />
           <entry key="project.open.time.14" value="3" />
           <entry key="project.open.time.15" value="2" />
@@ -107,43 +122,45 @@
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.8" value="2" />
           <entry key="project.open.time.9" value="2" />
-          <entry key="project.opened" value="26" />
+          <entry key="project.opened" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="class" value="5" />
-          <entry key="dummy" value="1" />
-          <entry key="fxml" value="18" />
-          <entry key="java" value="9510" />
-          <entry key="xml" value="22" />
+          <entry key="dummy" value="20" />
+          <entry key="fxml" value="21" />
+          <entry key="java" value="9514" />
+          <entry key="xml" value="101" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CLASS" value="5" />
-          <entry key="JAVA" value="9510" />
-          <entry key="PLAIN_TEXT" value="1" />
-          <entry key="XML" value="40" />
+          <entry key="JAVA" value="9514" />
+          <entry key="PLAIN_TEXT" value="20" />
+          <entry key="XML" value="122" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="android_data_binding" value="1" />
           <entry key="class" value="3" />
-          <entry key="fxml" value="4" />
-          <entry key="java" value="19" />
+          <entry key="css" value="1" />
+          <entry key="fxml" value="7" />
+          <entry key="java" value="21" />
           <entry key="sql" value="3" />
-          <entry key="xml" value="2" />
+          <entry key="xml" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="AndroidDataBinding" value="1" />
           <entry key="CLASS" value="3" />
-          <entry key="JAVA" value="19" />
+          <entry key="CSS" value="1" />
+          <entry key="JAVA" value="21" />
           <entry key="SQL" value="3" />
-          <entry key="XML" value="6" />
+          <entry key="XML" value="11" />
         </counts>
       </usages-collector>
     </session>
@@ -225,41 +242,24 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
+        <entry file="file://$PROJECT_DIR$/src/sample/ETLFormController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="265" lean-forward="true" selection-start-line="265" selection-end-line="265" />
+            <state relative-caret-position="405">
+              <caret line="240" column="71" selection-start-line="240" selection-start-column="71" selection-end-line="240" selection-end-column="71" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#40623#40624#0" expanded="true" />
+                <element signature="e#40654#40655#0" expanded="true" />
               </folding>
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/out/production/ETL_APP/Resources/style.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="4" lean-forward="true" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="31" column="143" selection-start-line="31" selection-start-column="143" selection-end-line="31" selection-end-column="143" />
-            </state>
-          </provider>
-          <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="28" column="5" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+            <state relative-caret-position="493">
+              <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -268,10 +268,42 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/ETLForm.fxml">
+          <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="235">
+              <caret line="80" column="106" selection-start-line="80" selection-start-column="106" selection-end-line="80" selection-end-column="106" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/Comment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1278">
+              <caret line="21" column="24" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="24" />
+              <folding>
+                <element signature="e#1097#1098#0" expanded="true" />
+                <element signature="e#1147#1148#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sample/DataViewController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="27" selection-start-line="27" selection-end-line="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/Film.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            <state relative-caret-position="306">
+              <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
             </state>
           </provider>
         </entry>
@@ -287,15 +319,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>controll</find>
-      <find>Film jest strasznie słaby</find>
-      <find>&quot;Shrek&quot; jest moim jednym z</find>
-      <find>ierwsza część Shreka jest przez większość ludzi</find>
-      <find>Pierwsza część Shreka jest przez większość ludzi,</find>
-      <find>OracleConn</find>
-      <find>loadCommentToDB</find>
-      <find>getComments</find>
-      <find>GetFilmsl</find>
       <find>TrData</find>
       <find>export</find>
       <find>click</find>
@@ -317,6 +340,15 @@
       <find>Update</find>
       <find>Delete</find>
       <find>clickUpdateLoadedData</find>
+      <find>pageCount</find>
+      <find>getFilmsCommentsLinks</find>
+      <find>setCommentRowNum</find>
+      <find>clickETLButton</find>
+      <find>getComments</find>
+      <find>getFilmsFromPage</find>
+      <find>showConfirmationWindow</find>
+      <find>:</find>
+      <find>dataViewController</find>
     </findStrings>
   </component>
   <component name="FindManager">
@@ -334,15 +366,18 @@
         <option value="$PROJECT_DIR$/src/sample/Film.java" />
         <option value="$PROJECT_DIR$/out/production/ETL_APP/Resources/DataBaseInitialScript.sql" />
         <option value="$PROJECT_DIR$/src/Resources/style.css" />
-        <option value="$PROJECT_DIR$/src/sample/Comment.java" />
         <option value="$PROJECT_DIR$/src/sample/dataView.fxml" />
         <option value="$PROJECT_DIR$/src/sample/dataViewController.java" />
         <option value="$PROJECT_DIR$/src/sample/sample.fxml" />
-        <option value="$PROJECT_DIR$/app_etl/pom.xml" />
         <option value="$PROJECT_DIR$/src/sample/OracleConn.java" />
         <option value="$PROJECT_DIR$/src/sample/Main.java" />
-        <option value="$PROJECT_DIR$/src/sample/Controller.java" />
         <option value="$PROJECT_DIR$/out/production/ETL_APP/Resources/style.css" />
+        <option value="$PROJECT_DIR$/src/sample/Controller.java" />
+        <option value="$PROJECT_DIR$/src/sample/Comment.java" />
+        <option value="$PROJECT_DIR$/src/sample/ETLForm.fxml" />
+        <option value="$PROJECT_DIR$/src/sample/DataView.fxml" />
+        <option value="$PROJECT_DIR$/src/sample/ETLFormController.java" />
+        <option value="$PROJECT_DIR$/app_etl/pom.xml" />
       </list>
     </option>
   </component>
@@ -353,12 +388,27 @@
       </MavenImportingSettings>
     </option>
   </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="app_etl" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="app_etl" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
+        </path>
+      </expand>
+      <select />
+    </treeState>
+  </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="230" />
-    <option name="y" value="70" />
-    <option name="width" value="1615" />
-    <option name="height" value="879" />
+    <option name="x" value="-7" />
+    <option name="width" value="974" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -388,6 +438,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -403,52 +455,12 @@
             <path>
               <item name="ETL_APP" type="b2602c69:ProjectViewProjectNode" />
               <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ETL_APP" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-              <item name="production" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ETL_APP" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-              <item name="production" type="462c0819:PsiDirectoryNode" />
-              <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ETL_APP" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
-              <item name="production" type="462c0819:PsiDirectoryNode" />
-              <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
-              <item name="Resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ETL_APP" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ETL_APP" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="Resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ETL_APP" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ETL_APP" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="sample" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -460,13 +472,18 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="OverrideImplement.combined" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1542867666791" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544647467211" />
     <property name="dynamic.classpath" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Resources/jsoup-1.11.3.jar!/" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\matsal\GitHub\ETL_APP\app_etl\src" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -581,19 +598,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7779633" visible="true" weight="0.24161074" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.9219089" visible="true" weight="0.18550107" />
       <window_info id="Favorites" order="1" weight="0.32995737" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
-      <window_info id="Structure" order="6" sideWeight="0.22203673" side_tool="true" visible="true" weight="0.24161074" />
+      <window_info id="Structure" order="6" sideWeight="0.07809111" side_tool="true" visible="true" weight="0.18550107" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.15035461" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.37635574" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -612,7 +628,7 @@
       <window_info anchor="right" id="JetGradle" order="3" />
       <window_info anchor="right" id="Database" order="4" />
       <window_info anchor="right" id="Palette" order="5" />
-      <window_info anchor="right" id="Maven Projects" order="6" />
+      <window_info anchor="right" id="Maven Projects" order="6" weight="0.32995737" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="right" id="Theme Preview" order="9" />
@@ -641,13 +657,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="20" column="24" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Resources/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="39" column="1" lean-forward="true" selection-start-line="39" selection-start-column="1" selection-end-line="39" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -693,14 +702,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/dataView.fxml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="1989">
-          <caret line="117" column="14" selection-start-line="117" selection-start-column="14" selection-end-line="117" selection-end-column="14" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/javafx-src.zip!/javafx/scene/control/DialogPane.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="218">
@@ -729,27 +730,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app_etl/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="21" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Comment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1974">
-          <caret line="183" column="73" lean-forward="true" selection-start-line="183" selection-start-column="73" selection-end-line="183" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/dataViewController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="32" column="94" selection-start-line="32" selection-start-column="94" selection-end-line="32" selection-end-column="94" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/OracleConn.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -757,45 +737,90 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/Controller.java">
+    <entry file="file://$PROJECT_DIR$/out/production/ETL_APP/Resources/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="265" lean-forward="true" selection-start-line="265" selection-end-line="265" />
+        <state relative-caret-position="102">
+          <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/DataView.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="40" selection-start-line="18" selection-start-column="40" selection-end-line="18" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/Comment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1278">
+          <caret line="21" column="24" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="24" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#1097#1098#0" expanded="true" />
+            <element signature="e#1147#1148#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sample/sample.fxml">
+    <entry file="file://$PROJECT_DIR$/src/sample/ETLForm.fxml">
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
       <provider editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="31" column="143" selection-start-line="31" selection-start-column="143" selection-end-line="31" selection-end-column="143" />
+        <state relative-caret-position="235">
+          <caret line="80" column="106" selection-start-line="80" selection-start-column="106" selection-end-line="80" selection-end-column="106" />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/ETLFormController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="240" column="71" selection-start-line="240" selection-start-column="71" selection-end-line="240" selection-end-column="71" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#40623#40624#0" expanded="true" />
+            <element signature="e#40654#40655#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sample/DataViewController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="28" column="5" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+        <state relative-caret-position="493">
+          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app_etl/dependency-reduced-pom.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Resources/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="32" column="19" lean-forward="true" selection-start-line="32" selection-start-column="19" selection-end-line="32" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app_etl/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="241">
+          <caret line="32" column="70" lean-forward="true" selection-start-line="32" selection-start-column="70" selection-end-line="32" selection-end-column="70" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/sample/Film.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/out/production/ETL_APP/Resources/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="4" lean-forward="true" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+        <state relative-caret-position="306">
+          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
         </state>
       </provider>
     </entry>
@@ -805,11 +830,12 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>JavaFXApp</last-edited>
+          <last-edited>FilmwebETL</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>

@@ -13,7 +13,7 @@ import javafx.scene.input.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.SQLException;
 
-public class dataViewController {
+public class DataViewController {
 
     @FXML
     private TableView tvDataView;
